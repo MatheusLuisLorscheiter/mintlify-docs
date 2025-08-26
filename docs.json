@@ -1,150 +1,87 @@
 {
-  "$schema": "https://mintlify.com/schema.json",
-  "name": "Sistema de Representantes API",
-  "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
-  },
-  "favicon": "/favicon.svg",
+  "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
+  "name": "Sistema de Representantes API",
   "colors": {
     "primary": "#0D9488",
     "light": "#07C983",
-    "dark": "#0D9488",
-    "background": {
-      "dark": "#090014"
-    },
-    "anchors": {
-      "from": "#0D9488",
-      "to": "#07C983"
-    }
+    "dark": "#0F766E"
   },
-  "topbarLinks": [
-    {
-      "name": "Sistema",
-      "url": "https://sistema-representantes.com.br"
-    }
-  ],
-  "topbarCtaButton": {
-    "name": "Acessar Painel",
-    "url": "https://sistema-representantes.com.br/dashboard"
-  },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "Status da API",
-      "icon": "signal",
-      "url": "https://status.sistema-representantes.com.br"
-    },
-    {
-      "name": "Suporte",
-      "icon": "messages",
-      "url": "mailto:suporte@sistema-representantes.com.br"
-    },
-    {
-      "name": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/sistema-representantes"
-    }
-  ],
-  "navigation": [
-    {
-      "group": "Começando",
-      "pages": [
-        "index",
-        "quickstart",
-        "concepts",
-        "authentication",
-        "error-handling"
-      ]
-    },
-    {
-      "group": "API Reference",
-      "pages": [
-        "api-reference/introduction",
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guias",
+        "groups": [
+          {
+            "group": "Introdução",
+            "pages": [
+              "index",
+              "quickstart",
+              "authentication"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Clientes",
+            "pages": [
+              "api-reference/clients/list",
+              "api-reference/clients/create"
+            ]
+          },
+          {
+            "group": "Vendas",
+            "pages": [
+              "api-reference/sales/list",
+              "api-reference/sales/create"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
         {
-          "group": "Endpoints",
-          "pages": [
-            "api-reference/clients",
-            "api-reference/sales"
-          ]
+          "anchor": "GitHub",
+          "href": "https://github.com/MatheusLuisLorscheiter/Sistema_Representantes",
+          "icon": "github"
+        },
+        {
+          "anchor": "Suporte",
+          "href": "mailto:suporte@sistema-representantes.com.br",
+          "icon": "envelope-open"
         }
       ]
     }
-  ],
-  "footerSocials": {
-    "github": "https://github.com/sistema-representantes",
-    "linkedin": "https://linkedin.com/company/sistema-representantes"
   },
-  "backgroundImage": "/images/background.png",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Sistema",
+        "href": "https://sistema-representantes.com.br"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://sistema-representantes.com.br/dashboard"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/MatheusLuisLorscheiter/Sistema_Representantes",
+      "website": "https://sistema-representantes.com.br"
+    }
+  },
   "modeToggle": {
-    "default": "light",
-    "isHidden": false
-  },
-  "feedback": {
-    "suggestEdit": true,
-    "raiseIssue": true
-  },
-  "search": {
-    "prompt": "Buscar na documentação..."
-  },
-  "metadata": {
-    "og:title": "Sistema de Representantes - Documentação da API",
-    "og:description": "Documentação completa da API REST para integração com o Sistema de Representantes",
-    "og:image": "/images/og-image.png",
-    "og:site_name": "Sistema de Representantes Docs",
-    "twitter:title": "Sistema de Representantes - Documentação da API",
-    "twitter:description": "Documentação completa da API REST para integração com o Sistema de Representantes",
-    "twitter:image": "/images/og-image.png",
-    "twitter:card": "summary_large_image"
-  },
-  "analytics": {
-    "ga4": {
-      "measurementId": "G-XXXXXXXXXX"
-    },
-    "hotjar": {
-      "hjid": 1234567,
-      "hjsv": 6
-    },
-    "posthog": {
-      "apiKey": "phc_xxxxxxxxxxxxxxxxxxxxxxxxxx"
-    }
-  },
-  "integrations": {
-    "intercom": {
-      "appId": "xxxxxxxxx"
-    }
-  },
-  "redirects": [
-    {
-      "source": "/docs",
-      "destination": "/"
-    },
-    {
-      "source": "/api",
-      "destination": "/api-reference/introduction"
-    }
-  ],
-  "api": {
-    "baseUrl": "https://api.sistema-representantes.com.br",
-    "auth": {
-      "method": "key",
-      "name": "x-api-key"
-    },
-    "playground": {
-      "mode": "show"
-    }
-  },
-  "openapi": "/api-reference/openapi.json",
-  "versions": ["v1"],
-  "defaultVersion": "v1",
-  "isWhiteLabeled": false,
-  "primaryTab": {
-    "name": "Guia"
+    "default": "light"
   }
 }

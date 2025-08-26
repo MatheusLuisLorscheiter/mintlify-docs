@@ -1,0 +1,275 @@
+---
+title: "Listar Clientes"
+api: "GET /api/v1/clients"
+description: "Lista todos os clientes cadastrados com paginação e busca"
+---
+
+<Tip>
+Retorna uma lista paginada de clientes. Suporta busca por nome, código, cidade ou email.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="page" type="number" default="1">
+  Número da página para paginação
+</ParamField>
+
+<ParamField query="limit" type="number" default="20">
+  Quantidade de registros por página (máximo: 100)
+</ParamField>
+
+<ParamField query="search" type="string">
+  Termo de busca. Procura em:
+  - Nome do cliente
+  - Código
+  - Cidade
+  - Email
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.sistema-representantes.com.br/api/v1/clients?page=1&limit=20" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```bash Busca
+curl -X GET "https://api.sistema-representantes.com.br/api/v1/clients?search=paulo" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/clients?page=1&limit=20', {
+  method: 'GET',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+console.log(`Total de clientes: ${result.total}`);
+console.log(`Clientes nesta página: ${result.data.length}`);
+```
+
+```python Python
+import requests
+
+url = "https://api.sistema-representantes.com.br/api/v1/clients"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+params = {
+    'page': 1,
+    'limit': 20,
+    'search': 'empresa'
+}
+
+response = requests.get(url, headers=headers, params=params)
+result = response.json()
+
+if response.status_code == 200:
+    print(f"Total de clientes: {result['total']}")
+    for client in result['data']:
+        print(f"- {client['nome']} ({client['codigo']})")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+```php PHP
+<?php
+$url = 'https://api.sistema-representantes.com.br/api/v1/clients';
+$headers = [
+    'x-api-key: sua-api-key-aqui'
+];
+
+$params = http_build_query([
+    'page' => 1,
+    'limit' => 20
+]);
+
+$options = [
+    'http' => [
+        'header' => implode("\r\n", $headers),
+        'method' => 'GET'
+    ]
+];
+
+$context = stream_context_create($options);
+$result = file_get_contents($url . '?' . $params, false, $context);
+$response = json_decode($result, true);
+
+if ($response) {
+    echo "Total de clientes: " . $response['total'] . "\n";
+    foreach ($response['data'] as $client) {
+        echo "- " . $client['nome'] . " (" . $client['codigo'] . ")\n";
+    }
+}
+?>
+```
+
+</RequestExample>
+
+## Response
+
+<ResponseField name="data" type="array">
+  Array contendo os clientes encontrados
+  
+  <Expandable title="Estrutura do cliente">
+    <ResponseField name="id" type="string">
+      ID único do cliente (UUID)
+    </ResponseField>
+    <ResponseField name="codigo" type="string">
+      Código personalizado do cliente
+    </ResponseField>
+    <ResponseField name="nome" type="string">
+      Nome/razão social do cliente
+    </ResponseField>
+    <ResponseField name="cnpj_cpf" type="string">
+      CNPJ ou CPF do cliente
+    </ResponseField>
+    <ResponseField name="email" type="string">
+      Email do cliente
+    </ResponseField>
+    <ResponseField name="telefone" type="string">
+      Telefone do cliente
+    </ResponseField>
+    <ResponseField name="endereco" type="string">
+      Endereço completo
+    </ResponseField>
+    <ResponseField name="cidade" type="string">
+      Cidade
+    </ResponseField>
+    <ResponseField name="estado" type="string">
+      Estado (sigla com 2 letras)
+    </ResponseField>
+    <ResponseField name="ativo" type="boolean">
+      Se o cliente está ativo
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      Data de criação no formato ISO 8601
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      Data da última atualização
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="page" type="number">
+  Página atual
+</ResponseField>
+
+<ResponseField name="limit" type="number">
+  Limite de registros por página
+</ResponseField>
+
+<ResponseField name="total" type="number">
+  Total de clientes no banco de dados
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "data": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "codigo": "CLI001",
+      "nome": "Empresa ABC Ltda",
+      "cnpj_cpf": "12.345.678/0001-90",
+      "email": "contato@empresaabc.com.br",
+      "telefone": "(11) 98765-4321",
+      "endereco": "Rua das Flores, 123",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "ativo": true,
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-20T14:25:00Z"
+    },
+    {
+      "id": "987e6543-e89b-12d3-a456-426614174999",
+      "codigo": "CLI002",
+      "nome": "Comércio XYZ",
+      "cnpj_cpf": "98.765.432/0001-10",
+      "email": "vendas@comercioxyz.com",
+      "telefone": "(21) 91234-5678",
+      "endereco": "Av. Principal, 456",
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ",
+      "ativo": true,
+      "created_at": "2024-01-10T08:15:00Z",
+      "updated_at": "2024-01-10T08:15:00Z"
+    }
+  ],
+  "page": 1,
+  "limit": 20,
+  "total": 150
+}
+```
+
+```json 200 - Lista Vazia
+{
+  "data": [],
+  "page": 1,
+  "limit": 20,
+  "total": 0
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key ausente"
+}
+```
+
+```json 401 - API Key Inválida
+{
+  "error": "API key inválida"
+}
+```
+
+```json 403 - Empresa Inativa
+{
+  "error": "Empresa inativa"
+}
+```
+
+</ResponseExample>
+
+## Paginação
+
+<Note>
+Para navegar pelos resultados:
+- Use `page` para especificar a página desejada
+- O `limit` controla quantos registros por página (máximo 100)
+- O campo `total` indica quantos registros existem no total
+
+Exemplo de cálculo da última página:
+```javascript
+const lastPage = Math.ceil(total / limit);
+```
+</Note>
+
+## Busca
+
+<Info>
+O parâmetro `search` realiza busca em múltiplos campos simultaneamente:
+- **Nome**: Busca parcial, não case-sensitive
+- **Código**: Busca parcial
+- **Cidade**: Busca parcial
+- **Email**: Busca parcial
+
+Exemplo: `?search=paulo` retornará:
+- Clientes com "Paulo" no nome
+- Clientes em "São Paulo"
+- Clientes com "paulo" no email
+</Info>

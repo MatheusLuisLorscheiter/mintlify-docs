@@ -1,69 +1,92 @@
 ---
 title: Sistema de Representantes - API REST
-description: Documentação oficial da API REST do Sistema de Representantes
+description: Documentação oficial da API REST para integração com o Sistema de Representantes
 ---
 
-# Sistema de Representantes - API REST
+# Bem-vindo à API do Sistema de Representantes
 
-Bem-vindo à documentação oficial da API REST do Sistema de Representantes. Esta API permite integração com sistemas externos para gerenciar clientes e vendas.
+API REST moderna e segura para gerenciar clientes e vendas do seu sistema de representação comercial.
 
-## Visão Geral
-
-O Sistema de Representantes oferece endpoints REST para:
-
-- **Gerenciamento de Clientes**: Criar e listar clientes
-- **Gerenciamento de Vendas**: Criar e listar vendas com itens
-
-## Características Principais
+## Recursos Principais
 
 <CardGroup cols={2}>
-  <Card title="API RESTful" icon="code">
-    Endpoints REST seguindo as melhores práticas de design de APIs
+  <Card title="Gerenciamento de Clientes" icon="users" href="/api-reference/clients/list">
+    Cadastre e gerencie todos os seus clientes com informações completas
   </Card>
-  <Card title="Autenticação via API Key" icon="key">
-    Sistema seguro de autenticação usando chaves de API
-  </Card>
-  <Card title="Multi-tenant" icon="building">
-    Suporte completo para múltiplas empresas com isolamento de dados
-  </Card>
-  <Card title="Respostas em JSON" icon="brackets-curly">
-    Todas as respostas em formato JSON padronizado
+  <Card title="Controle de Vendas" icon="shopping-cart" href="/api-reference/sales/list">
+    Registre vendas com múltiplos itens e acompanhe o faturamento
   </Card>
 </CardGroup>
 
-## Começando
+## Início Rápido
 
-Para começar a usar a API, você precisa:
+<Steps>
+  <Step title="Obtenha sua API Key">
+    Acesse o painel administrativo e gere sua chave de autenticação
+  </Step>
+  <Step title="Configure a autenticação">
+    Adicione o header `x-api-key` em todas as suas requisições
+  </Step>
+  <Step title="Faça sua primeira requisição">
+    Teste a API listando seus clientes cadastrados
+  </Step>
+</Steps>
 
-1. **Obter uma API Key**: Entre em contato com o administrador do sistema
-2. **Configurar a autenticação**: Use o header `x-api-key` em todas as requisições
-3. **Fazer sua primeira requisição**: Teste com o endpoint de listagem de clientes
+```bash
+curl -X GET https://api.sistema-representantes.com.br/api/v1/clients \
+  -H "x-api-key: sua-api-key-aqui"
+```
 
 ## Base URL
+
+Todas as requisições devem ser feitas para:
 
 ```
 https://api.sistema-representantes.com.br/api/v1
 ```
 
-## Autenticação
+## Recursos da API
 
-Todas as requisições devem incluir o header de autenticação:
+### 🏢 Clientes
+- Listar clientes com paginação e busca
+- Criar novos clientes com validação automática
+- Gerenciar informações completas (CNPJ/CPF, endereço, contatos)
 
-```bash
-x-api-key: sua-chave-api-aqui
-```
+### 💰 Vendas
+- Registrar vendas com múltiplos produtos
+- Cálculo automático de valores
+- Controle de status (Pedido, Faturado, Enviado, Entregue)
+- Geração automática de códigos de pedido
 
-## Códigos de Status HTTP
+## Características Técnicas
 
-| Código | Descrição |
-|--------|-----------|
-| 200    | Sucesso |
-| 201    | Recurso criado com sucesso |
-| 400    | Requisição inválida |
-| 401    | Não autorizado (API key inválida ou ausente) |
-| 403    | Acesso negado (empresa inativa) |
-| 500    | Erro interno do servidor |
+<CardGroup cols={3}>
+  <Card title="Multi-tenant" icon="building">
+    Dados isolados por empresa com segurança total
+  </Card>
+  <Card title="RESTful" icon="code">
+    Arquitetura REST com padrões modernos
+  </Card>
+  <Card title="Validação" icon="shield-check">
+    Validação automática de dados com mensagens claras
+  </Card>
+</CardGroup>
 
 ## Suporte
 
-Para suporte técnico ou dúvidas sobre a API, entre em contato com nossa equipe de desenvolvimento.
+Precisa de ajuda? Entre em contato:
+
+- 📧 Email: suporte@sistema-representantes.com.br
+- 💬 WhatsApp: (48) 98842-0158
+- 🐛 Issues: [GitHub](https://github.com/MatheusLuisLorscheiter/Sistema_Representantes)
+
+## Próximos Passos
+
+<CardGroup cols={2}>
+  <Card title="Início Rápido" icon="rocket" href="/quickstart">
+    Aprenda a fazer suas primeiras requisições
+  </Card>
+  <Card title="Autenticação" icon="key" href="/authentication">
+    Entenda como funciona a autenticação via API Key
+  </Card>
+</CardGroup>
