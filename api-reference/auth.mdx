@@ -1,0 +1,36 @@
+---
+title: Autenticação
+description: Autenticação via API Key por empresa
+---
+
+Toda requisição deve incluir a API Key no header X-API-Key. As chaves são geradas por empresa no painel Admin.
+
+Header:
+
+```http
+X-API-Key: SRK_xxxxxxxxxxxxxxxxx
+```
+
+Exemplo cURL:
+
+```bash
+curl -X GET \
+  -H "X-API-Key: SRK_xxxxxxxxx" \
+  "https://sistema-representantes.chavemestragestao.com.br/api/v1/clients?page=1&limit=20"
+```
+
+Exemplo Java (HttpClient):
+
+```java
+var client = java.net.http.HttpClient.newHttpClient();
+var req = java.net.http.HttpRequest.newBuilder()
+  .uri(java.net.URI.create("https://sistema-representantes.chavemestragestao.com.br/api/v1/clients"))
+  .header("X-API-Key", "SRK_xxxxxxxxx")
+  .build();
+var res = client.send(req, java.net.http.HttpResponse.BodyHandlers.ofString());
+System.out.println(res.body());
+```
+
+Erros comuns:
+- 401: API key ausente/invalid
+- 403: empresa inativa

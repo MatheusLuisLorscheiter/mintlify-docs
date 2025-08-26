@@ -1,0 +1,105 @@
+---
+title: Clientes
+description: Endpoints para listar e criar clientes
+---
+
+## GET /api/v1/clients
+
+Lista clientes da empresa autenticada.
+
+Query:
+- `page` (default 1)
+- `limit` (default 20, máx 100)
+- `search` (opcional)
+
+Exemplo cURL:
+
+```bash
+curl -X GET \
+  -H "X-API-Key: SRK_xxxxxxxxx" \
+  "https://sistema-representantes.chavemestragestao.com.br/api/v1/clients?page=1&limit=20&search=joao"
+```
+
+Exemplo Java (OkHttp):
+
+```java
+OkHttpClient client = new OkHttpClient();
+Request request = new Request.Builder()
+  .url("https://sistema-representantes.chavemestragestao.com.br/api/v1/clients?page=1&limit=20")
+  .addHeader("X-API-Key", "SRK_xxxxxxxxx")
+  .build();
+try (Response response = client.newCall(request).execute()) {
+  System.out.println(response.body().string());
+}
+```
+
+Resposta 200:
+
+```json
+{
+  "data": [
+    {
+      "id": "...",
+      "nome": "Cliente X",
+      "email": "x@exemplo.com",
+      "ativo": true
+    }
+  ],
+  "page": 1,
+  "limit": 20,
+  "total": 100
+}
+```
+
+## POST /api/v1/clients
+
+Cria um cliente.
+
+Body:
+
+```json
+{
+  "nome": "Cliente X",
+  "email": "x@exemplo.com",
+  "telefone": "...",
+  "cidade": "...",
+  "estado": "...",
+  "ativo": true
+}
+```
+
+Exemplo cURL:
+
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: SRK_xxxxxxxxx" \
+  -d '{
+    "nome": "Cliente X",
+    "email": "x@exemplo.com",
+    "ativo": true
+  }' \
+  "https://sistema-representantes.chavemestragestao.com.br/api/v1/clients"
+```
+
+Exemplo Node.js (fetch):
+
+```js
+const res = await fetch("https://sistema-representantes.chavemestragestao.com.br/api/v1/clients", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": "SRK_xxxxxxxxx"
+  },
+  body: JSON.stringify({ nome: "Cliente X", ativo: true })
+});
+const json = await res.json();
+```
+
+Resposta 201:
+
+```json
+{
+  "data": { "id": "...", "nome": "Cliente X", "ativo": true }
+}
+```

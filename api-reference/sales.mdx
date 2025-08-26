@@ -1,0 +1,104 @@
+---
+title: Vendas
+description: Endpoints para listar e criar vendas
+---
+
+## GET /api/v1/sales
+
+Lista vendas da empresa autenticada.
+
+Query:
+- `page` (default 1)
+- `limit` (default 20, máx 100)
+
+Exemplo cURL:
+
+```bash
+curl -X GET \
+  -H "X-API-Key: SRK_xxxxxxxxx" \
+  "https://sistema-representantes.chavemestragestao.com.br/api/v1/sales?page=1&limit=20"
+```
+
+Resposta 200:
+
+```json
+{
+  "data": [
+    {
+      "id": "...",
+      "pedido": "...",
+      "data": "2025-08-26T12:00:00.000Z",
+      "cliente_nome": "Cliente X",
+      "representada_nome": "Representada Y",
+      "valor_total": 1500.5,
+      "currency": "BRL"
+    }
+  ],
+  "page": 1,
+  "limit": 20,
+  "total": 10
+}
+```
+
+## POST /api/v1/sales
+
+Cria uma venda com itens.
+
+Body:
+
+```json
+{
+  "clienteId": "...",
+  "representadaId": "...",
+  "status": "EM_ANDAMENTO",
+  "nf": "",
+  "pedido": "",
+  "itens": [
+    { "produtoId": "...", "quantidade": 1, "valorUnitario": 10.5 }
+  ]
+}
+```
+
+Exemplo cURL:
+
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: SRK_xxxxxxxxx" \
+  -d '{
+    "clienteId": "...",
+    "representadaId": "...",
+    "status": "EM_ANDAMENTO",
+    "itens": [{ "produtoId": "...", "quantidade": 1, "valorUnitario": 10.5 }]
+  }' \
+  "https://sistema-representantes.chavemestragestao.com.br/api/v1/sales"
+```
+
+Exemplo Java (HttpClient):
+
+```java
+var client = java.net.http.HttpClient.newHttpClient();
+var body = "{\"clienteId\":\"...\",\"representadaId\":\"...\",\"status\":\"EM_ANDAMENTO\",\"itens\":[{\"produtoId\":\"...\",\"quantidade\":1,\"valorUnitario\":10.5}]}";
+var req = java.net.http.HttpRequest.newBuilder()
+  .uri(java.net.URI.create("https://sistema-representantes.chavemestragestao.com.br/api/v1/sales"))
+  .header("Content-Type", "application/json")
+  .header("X-API-Key", "SRK_xxxxxxxxx")
+  .POST(java.net.http.HttpRequest.BodyPublishers.ofString(body))
+  .build();
+var res = client.send(req, java.net.http.HttpResponse.BodyHandlers.ofString());
+System.out.println(res.body());
+```
+
+Resposta 201:
+
+```json
+{
+  "data": {
+    "id": "...",
+    "pedido": "...",
+    "data": "2025-08-26T12:00:00.000Z",
+    "valor_total": 10.5,
+    "currency": "BRL"
+  }
+}
+```

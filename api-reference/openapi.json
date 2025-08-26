@@ -1,216 +1,197 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Sistema de Representantes - REST API",
+    "version": "1.0.0",
+    "description": "API pública para integração com o Sistema de Representantes. Autenticação via API Key por empresa (header X-API-Key)."
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://sistema-representantes.chavemestragestao.com.br"
     }
   ],
   "security": [
-    {
-      "bearerAuth": []
-    }
+    { "ApiKeyAuth": [] }
   ],
   "paths": {
-    "/plants": {
+    "/api/v1/clients": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "summary": "Listar clientes",
+        "description": "Lista clientes da empresa autenticada por API Key.",
         "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1, "minimum": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 20, "maximum": 100 } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
+            "description": "Lista de clientes",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ClientsResponse" } } }
           },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+          "401": { "description": "API key ausente ou inválida" },
+          "403": { "description": "Empresa inativa" }
         }
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "summary": "Criar cliente",
+        "description": "Cria um novo cliente no schema da empresa autenticada.",
         "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NewClientRequest" } } }
         },
         "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+          "201": { "description": "Cliente criado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ClientWrap" } } } },
+          "400": { "description": "Corpo inválido" },
+          "401": { "description": "API key ausente ou inválida" },
+          "403": { "description": "Empresa inativa" }
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/api/v1/sales": {
+      "get": {
+        "summary": "Listar vendas",
+        "description": "Lista vendas da empresa autenticada por API Key (com nomes de cliente e representada).",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1, "minimum": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 20, "maximum": 100 } }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "Lista de vendas",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SalesResponse" } } }
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+          "401": { "description": "API key ausente ou inválida" },
+          "403": { "description": "Empresa inativa" }
         }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
+      },
       "post": {
-        "description": "Information about a new plant added to the store",
+        "summary": "Criar venda",
+        "description": "Cria uma venda com itens no schema da empresa autenticada.",
         "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NewSaleRequest" } } }
         },
         "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
+          "201": { "description": "Venda criada", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SaleWrap" } } } },
+          "400": { "description": "Corpo inválido" },
+          "401": { "description": "API key ausente ou inválida" },
+          "403": { "description": "Empresa inativa" }
         }
       }
     }
   },
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "ApiKeyAuth": { "type": "apiKey", "in": "header", "name": "X-API-Key" }
+    },
+    "schemas": {
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "codigo": { "type": "string", "nullable": true },
+          "nome": { "type": "string" },
+          "email": { "type": "string", "nullable": true },
+          "telefone": { "type": "string", "nullable": true },
+          "cidade": { "type": "string", "nullable": true },
+          "estado": { "type": "string", "nullable": true },
+          "cnpj_cpf": { "type": "string", "nullable": true },
+          "endereco": { "type": "string", "nullable": true },
+          "bairro": { "type": "string", "nullable": true },
+          "observacao": { "type": "string", "nullable": true },
+          "segunda": { "type": "boolean" },
+          "terca": { "type": "boolean" },
+          "quarta": { "type": "boolean" },
+          "quinta": { "type": "boolean" },
+          "sexta": { "type": "boolean" },
+          "ativo": { "type": "boolean" }
+        },
+        "required": ["id", "nome", "ativo"]
+      },
+      "NewClientRequest": {
+        "type": "object",
+        "properties": {
+          "codigo": { "type": "string" },
+          "nome": { "type": "string" },
+          "email": { "type": "string" },
+          "telefone": { "type": "string" },
+          "cidade": { "type": "string" },
+          "estado": { "type": "string" },
+          "cnpj_cpf": { "type": "string" },
+          "endereco": { "type": "string" },
+          "bairro": { "type": "string" },
+          "observacao": { "type": "string" },
+          "ativo": { "type": "boolean", "default": true }
+        },
+        "required": ["nome"]
+      },
+      "SaleItem": {
+        "type": "object",
+        "properties": {
+          "produtoId": { "type": "string" },
+          "quantidade": { "type": "number" },
+          "valorUnitario": { "type": "number" }
+        },
+        "required": ["produtoId", "quantidade", "valorUnitario"]
+      },
+      "Sale": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "pedido": { "type": "string" },
+          "data": { "type": "string", "format": "date-time" },
+          "nf": { "type": "string", "nullable": true },
+          "ano": { "type": "integer" },
+          "mes": { "type": "integer" },
+          "dia": { "type": "integer" },
+          "cliente_id": { "type": "string" },
+          "representada_id": { "type": "string" },
+          "status": { "type": "string" },
+          "valor_total": { "type": "number" },
+          "currency": { "type": "string" },
+          "cliente_nome": { "type": "string" },
+          "representada_nome": { "type": "string" }
+        },
+        "required": ["id", "pedido", "data", "cliente_id", "representada_id", "status", "valor_total", "currency"]
+      },
+      "NewSaleRequest": {
+        "type": "object",
+        "properties": {
+          "clienteId": { "type": "string" },
+          "representadaId": { "type": "string" },
+          "status": { "type": "string" },
+          "nf": { "type": "string" },
+          "pedido": { "type": "string" },
+          "data": { "type": "string", "format": "date-time" },
+          "itens": { "type": "array", "minItems": 1, "items": { "$ref": "#/components/schemas/SaleItem" } }
+        },
+        "required": ["clienteId", "representadaId", "status", "itens"]
+      },
+      "ClientsResponse": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Client" } },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "total": { "type": "integer" }
+        }
+      },
+      "SalesResponse": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Sale" } },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "total": { "type": "integer" }
+        }
+      },
+      "ClientWrap": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/Client" } }
+      },
+      "SaleWrap": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/Sale" } }
       }
     }
   }

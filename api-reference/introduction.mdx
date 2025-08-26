@@ -1,33 +1,35 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'Introdução'
+description: 'Referência da API REST v1 do Sistema de Representantes'
 ---
 
 <Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
+  Esta documentação descreve a API pública exposta pelo Sistema de Representantes.
+  A autenticação é feita via API Key por empresa, enviada no header <code>X-API-Key</code>.
 </Note>
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Você pode explorar a API pelo playground usando a especificação OpenAPI abaixo.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="OpenAPI - REST v1"
+  icon="book-open-cover"
+  href="/api-reference/openapi.json"
 >
   View the OpenAPI specification file
 </Card>
 
-## Authentication
+## Autenticação
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Todos os endpoints exigem chave de API por empresa no header:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+"security": [ { "ApiKeyAuth": [] } ]
+
+Header de exemplo:
+
+```http
+X-API-Key: SRK_xxxxx
+```
 ```
