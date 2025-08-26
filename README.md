@@ -1,44 +1,60 @@
-# Mintlify Starter Kit
+# Documentação do Sistema de Representantes
 
-Use the starter kit to get your docs deployed and ready to customize.
+Esta pasta contém a documentação da API REST do Sistema de Representantes usando Mintlify.
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
-
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
-
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
-
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+## Estrutura
 
 ```
-npm i -g mint
+docs-app/
+├── api-reference/      # Documentação dos endpoints da API
+│   ├── auth.mdx       # Autenticação e API Keys
+│   ├── clients.mdx    # Endpoints de clientes
+│   ├── introduction.mdx # Introdução à API
+│   ├── openapi.json   # Especificação OpenAPI
+│   └── sales.mdx      # Endpoints de vendas
+├── images/            # Imagens da documentação
+├── logo/              # Logos do sistema
+├── snippets/          # Snippets reutilizáveis
+├── docs.json          # Configuração do Mintlify
+├── favicon.svg        # Favicon
+└── index.mdx          # Página inicial
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+## Desenvolvimento Local
 
+Para rodar a documentação localmente:
+
+```bash
+# Instalar Mintlify CLI
+npm i -g mintlify
+
+# Rodar servidor de desenvolvimento
+mintlify dev
 ```
-mint dev
-```
 
-View your local preview at `http://localhost:3000`.
+A documentação estará disponível em `http://localhost:3000`.
 
-## Publishing changes
+## Deploy
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+A documentação é automaticamente deployada quando há mudanças na branch principal.
 
-## Need help?
+## Atualizando a Documentação
 
-### Troubleshooting
+### Adicionando Novos Endpoints
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
+1. Crie um novo arquivo `.mdx` em `api-reference/`
+2. Adicione a referência no `docs.json` na seção `navigation`
+3. Atualize o `openapi.json` se necessário
 
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
-- [Mintlify community](https://mintlify.com/community)
+### Convenções
+
+- Use PascalCase para títulos
+- Sempre inclua exemplos de request/response
+- Documente todos os parâmetros e seus tipos
+- Mantenha consistência com os outros endpoints
+
+## Links Úteis
+
+- [Documentação do Mintlify](https://mintlify.com/docs)
+- [Sintaxe MDX](https://mdxjs.com/)
+- [OpenAPI Specification](https://swagger.io/specification/)

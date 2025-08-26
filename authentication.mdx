@@ -1,0 +1,139 @@
+---
+title: Autenticação
+description: Como autenticar suas requisições na API do Sistema de Representantes
+---
+
+# Autenticação
+
+A API do Sistema de Representantes utiliza autenticação baseada em API Key para garantir acesso seguro aos dados da sua empresa.
+
+## Como funciona
+
+Todas as requisições à API devem incluir uma chave de API válida no header `x-api-key`. Esta chave é única para cada empresa e garante o isolamento completo dos dados.
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET \
+  https://api.sistema-representantes.com.br/api/v1/clients \
+  -H 'x-api-key: sua-chave-api-aqui' \
+  -H 'Content-Type: application/json'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/clients', {
+  method: 'GET',
+  headers: {
+    'x-api-key': 'sua-chave-api-aqui',
+    'Content-Type': 'application/json'
+  }
+});
+
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+headers = {
+    'x-api-key': 'sua-chave-api-aqui',
+    'Content-Type': 'application/json'
+}
+
+response = requests.get(
+    'https://api.sistema-representantes.com.br/api/v1/clients',
+    headers=headers
+)
+
+data = response.json()
+```
+
+</CodeGroup>
+
+## Obtendo uma API Key
+
+Para obter sua API Key:
+
+1. Acesse o painel administrativo do sistema
+2. Navegue até **Configurações** → **Integrações** → **API Keys**
+3. Clique em **Gerar Nova API Key**
+4. Copie e armazene sua chave com segurança
+
+<Warning>
+A API Key será exibida apenas uma vez. Certifique-se de copiá-la e armazená-la em um local seguro. Se perder a chave, será necessário gerar uma nova.
+</Warning>
+
+## Segurança
+
+### Melhores Práticas
+
+- **Nunca exponha sua API Key** em código client-side ou repositórios públicos
+- **Use HTTPS** em todas as requisições para garantir criptografia
+- **Rotacione suas chaves** regularmente (recomendado: a cada 90 dias)
+- **Armazene em variáveis de ambiente** ao invés de hardcode
+
+### Exemplo de uso com variáveis de ambiente
+
+```javascript .env
+API_KEY=sua-chave-api-aqui
+API_BASE_URL=https://api.sistema-representantes.com.br/api/v1
+```
+
+```javascript index.js
+// Nunca faça commit de credenciais
+const apiKey = process.env.API_KEY;
+const baseUrl = process.env.API_BASE_URL;
+
+async function fetchClients() {
+  const response = await fetch(`${baseUrl}/clients`, {
+    headers: {
+      'x-api-key': apiKey
+    }
+  });
+  
+  return response.json();
+}
+```
+
+## Respostas de Erro
+
+Quando a autenticação falha, a API retorna códigos de status HTTP específicos:
+
+| Código | Mensagem | Descrição |
+|--------|----------|-----------|
+| `401` | `API key ausente` | O header `x-api-key` não foi incluído na requisição |
+| `401` | `API key inválida` | A API key fornecida não existe ou está incorreta |
+| `403` | `Empresa inativa` | A empresa associada à API key está inativa no sistema |
+
+### Exemplo de resposta de erro
+
+```json
+{
+  "error": "API key inválida"
+}
+```
+
+## Limites de Rate
+
+Para garantir a qualidade do serviço para todos os usuários:
+
+- **1000 requisições por hora** por API key
+- **10 requisições simultâneas** máximo
+- **5MB** tamanho máximo de payload
+
+Se exceder os limites, você receberá:
+
+```json
+{
+  "error": "Too many requests",
+  "retry_after": 3600
+}
+```
+
+## Suporte
+
+Tendo problemas com autenticação? Entre em contato:
+
+- Email: suporte@sistema-representantes.com.br
+- Documentação: https://docs.sistema-representantes.com.br
+- Status da API: https://status.sistema-representantes.com.br

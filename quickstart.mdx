@@ -1,80 +1,385 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Início Rápido
+description: Comece a usar a API do Sistema de Representantes em minutos
 ---
 
-## Get started in three steps
+# Início Rápido
 
-Get your documentation site running locally and make your first customization.
+Este guia vai te ajudar a fazer sua primeira requisição à API do Sistema de Representantes em poucos minutos.
 
-### Step 1: Set up your local environment
+## Pré-requisitos
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+Antes de começar, você precisa:
+
+1. Uma conta ativa no Sistema de Representantes
+2. Uma API Key válida (veja [Autenticação](/authentication))
+
+## Sua Primeira Requisição
+
+Vamos listar os clientes da sua empresa:
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET \
+  https://api.sistema-representantes.com.br/api/v1/clients \
+  -H 'x-api-key: sua-chave-api-aqui'
+```
+
+```javascript Node.js
+const fetch = require('node-fetch');
+
+async function listarClientes() {
+  const response = await fetch('https://api.sistema-representantes.com.br/api/v1/clients', {
+    headers: {
+      'x-api-key': 'sua-chave-api-aqui'
+    }
+  });
+  
+  const data = await response.json();
+  console.log(data);
+}
+
+listarClientes();
+```
+
+```python Python
+import requests
+
+def listar_clientes():
+    headers = {
+        'x-api-key': 'sua-chave-api-aqui'
+    }
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    response = requests.get(
+        'https://api.sistema-representantes.com.br/api/v1/clients',
+        headers=headers
+    )
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    print(response.json())
 
-### Step 2: Deploy your changes
+listar_clientes()
+```
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+</CodeGroup>
+
+### Resposta Esperada
+
+```json
+{
+  "data": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "codigo": "CLI001",
+      "nome": "Empresa ABC Ltda",
+      "email": "contato@empresaabc.com.br",
+      "telefone": "(11) 98765-4321",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "ativo": true
+    }
+  ],
+  "page": 1,
+  "limit": 20,
+  "total": 1
+}
+```
+
+## Criando um Cliente
+
+Agora vamos criar um novo cliente:
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST \
+  https://api.sistema-representantes.com.br/api/v1/clients \
+  -H 'x-api-key: sua-chave-api-aqui' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "nome": "Nova Empresa Ltda",
+    "email": "contato@novaempresa.com.br",
+    "telefone": "(11) 91234-5678",
+    "cidade": "São Paulo",
+    "estado": "SP"
+  }'
+```
+
+```javascript Node.js
+async function criarCliente() {
+  const novoCliente = {
+    nome: "Nova Empresa Ltda",
+    email: "contato@novaempresa.com.br",
+    telefone: "(11) 91234-5678",
+    cidade: "São Paulo",
+    estado: "SP"
+  };
+
+  const response = await fetch('https://api.sistema-representantes.com.br/api/v1/clients', {
+    method: 'POST',
+    headers: {
+      'x-api-key': 'sua-chave-api-aqui',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(novoCliente)
+  });
+  
+  const data = await response.json();
+  console.log('Cliente criado:', data);
+}
+
+criarCliente();
+```
+
+```python Python
+import requests
+import json
+
+def criar_cliente():
+    headers = {
+        'x-api-key': 'sua-chave-api-aqui',
+        'Content-Type': 'application/json'
+    }
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    novo_cliente = {
+        "nome": "Nova Empresa Ltda",
+        "email": "contato@novaempresa.com.br",
+        "telefone": "(11) 91234-5678",
+        "cidade": "São Paulo",
+        "estado": "SP"
+    }
+    
+    response = requests.post(
+        'https://api.sistema-representantes.com.br/api/v1/clients',
+        headers=headers,
+        data=json.dumps(novo_cliente)
+    )
+    
+    print('Cliente criado:', response.json())
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+criar_cliente()
+```
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+</CodeGroup>
 
-### Step 3: Go live
+## Registrando uma Venda
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+Exemplo completo de como registrar uma venda com múltiplos itens:
 
-## Next steps
+<CodeGroup>
 
-Now that you have your docs running, explore these key features:
+```javascript Node.js
+async function registrarVenda() {
+  const venda = {
+    clienteId: "123e4567-e89b-12d3-a456-426614174000",
+    representadaId: "987e6543-e89b-12d3-a456-426614174999",
+    status: "Pedido",
+    itens: [
+      {
+        produtoId: "prod-001",
+        quantidade: 10,
+        valorUnitario: 250.00
+      },
+      {
+        produtoId: "prod-002",
+        quantidade: 5,
+        valorUnitario: 450.00
+      }
+    ]
+  };
 
-<CardGroup cols={2}>
+  try {
+    const response = await fetch('https://api.sistema-representantes.com.br/api/v1/sales', {
+      method: 'POST',
+      headers: {
+        'x-api-key': 'sua-chave-api-aqui',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(venda)
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error);
+    }
+    
+    const data = await response.json();
+    console.log('Venda registrada:', data);
+    
+    // Valor total calculado automaticamente: R$ 4.750,00
+    console.log('Valor total:', data.data.valor_total);
+    
+  } catch (error) {
+    console.error('Erro ao registrar venda:', error);
+  }
+}
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+registrarVenda();
+```
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+```python Python
+import requests
+import json
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+def registrar_venda():
+    headers = {
+        'x-api-key': 'sua-chave-api-aqui',
+        'Content-Type': 'application/json'
+    }
+    
+    venda = {
+        "clienteId": "123e4567-e89b-12d3-a456-426614174000",
+        "representadaId": "987e6543-e89b-12d3-a456-426614174999",
+        "status": "Pedido",
+        "itens": [
+            {
+                "produtoId": "prod-001",
+                "quantidade": 10,
+                "valorUnitario": 250.00
+            },
+            {
+                "produtoId": "prod-002",
+                "quantidade": 5,
+                "valorUnitario": 450.00
+            }
+        ]
+    }
+    
+    try:
+        response = requests.post(
+            'https://api.sistema-representantes.com.br/api/v1/sales',
+            headers=headers,
+            data=json.dumps(venda)
+        )
+        
+        response.raise_for_status()
+        
+        data = response.json()
+        print('Venda registrada:', data)
+        print(f'Valor total: R$ {data["data"]["valor_total"]}')
+        
+    except requests.exceptions.RequestException as e:
+        print('Erro ao registrar venda:', e)
+        if hasattr(e.response, 'json'):
+            print('Detalhes:', e.response.json())
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+registrar_venda()
+```
 
-</CardGroup>
+</CodeGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Exemplo Completo: Fluxo de Venda
+
+Aqui está um exemplo completo que demonstra o fluxo típico de uso da API:
+
+```javascript
+// 1. Configuração inicial
+const API_KEY = process.env.API_KEY;
+const API_BASE = 'https://api.sistema-representantes.com.br/api/v1';
+
+const headers = {
+  'x-api-key': API_KEY,
+  'Content-Type': 'application/json'
+};
+
+// 2. Função auxiliar para requisições
+async function apiRequest(endpoint, options = {}) {
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers: { ...headers, ...options.headers }
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error);
+  }
+  
+  return response.json();
+}
+
+// 3. Buscar ou criar cliente
+async function garantirCliente(dadosCliente) {
+  // Buscar cliente existente
+  const { data: clientes } = await apiRequest(
+    `/clients?search=${encodeURIComponent(dadosCliente.cnpj_cpf)}`
+  );
+  
+  if (clientes.length > 0) {
+    console.log('Cliente encontrado:', clientes[0].nome);
+    return clientes[0];
+  }
+  
+  // Criar novo cliente
+  console.log('Criando novo cliente...');
+  const { data: novoCliente } = await apiRequest('/clients', {
+    method: 'POST',
+    body: JSON.stringify(dadosCliente)
+  });
+  
+  return novoCliente;
+}
+
+// 4. Registrar venda
+async function processarVenda() {
+  try {
+    // Dados do cliente
+    const cliente = await garantirCliente({
+      nome: "Supermercado Silva",
+      cnpj_cpf: "12.345.678/0001-90",
+      email: "compras@supermercadosilva.com.br",
+      telefone: "(11) 98765-4321",
+      cidade: "São Paulo",
+      estado: "SP"
+    });
+    
+    // Registrar a venda
+    const venda = {
+      clienteId: cliente.id,
+      representadaId: "987e6543-e89b-12d3-a456-426614174999",
+      status: "Pedido",
+      itens: [
+        {
+          produtoId: "prod-queijo-mussarela",
+          quantidade: 20,
+          valorUnitario: 35.90
+        },
+        {
+          produtoId: "prod-queijo-prato",
+          quantidade: 15,
+          valorUnitario: 32.50
+        }
+      ]
+    };
+    
+    const { data: vendaRegistrada } = await apiRequest('/sales', {
+      method: 'POST',
+      body: JSON.stringify(venda)
+    });
+    
+    console.log('✅ Venda registrada com sucesso!');
+    console.log(`   Pedido: ${vendaRegistrada.pedido}`);
+    console.log(`   Cliente: ${vendaRegistrada.cliente_nome}`);
+    console.log(`   Valor Total: R$ ${vendaRegistrada.valor_total.toFixed(2)}`);
+    
+  } catch (error) {
+    console.error('❌ Erro:', error.message);
+  }
+}
+
+// Executar
+processarVenda();
+```
+
+## Próximos Passos
+
+Agora que você fez suas primeiras requisições, explore:
+
+- [Conceitos](/concepts) - Entenda melhor como a API funciona
+- [Referência da API](/api-reference/introduction) - Documentação completa dos endpoints
+- [Tratamento de Erros](/error-handling) - Como lidar com erros e exceções
+
+## Precisa de Ajuda?
+
+- 📧 Email: suporte@sistema-representantes.com.br
+- 📚 Documentação completa: https://docs.sistema-representantes.com.br
+- 🔍 Status da API: https://status.sistema-representantes.com.br

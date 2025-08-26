@@ -1,84 +1,149 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Sistema de Representantes - API Docs",
-  "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Sistema de Representantes API",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
   },
   "favicon": "/favicon.svg",
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "Referência",
-            "pages": [
-              "api-reference/introduction",
-              "api-reference/auth",
-              "api-reference/clients",
-              "api-reference/sales"
-            ]
-          }
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
+  "colors": {
+    "primary": "#0D9488",
+    "light": "#07C983",
+    "dark": "#0D9488",
+    "background": {
+      "dark": "#090014"
+    },
+    "anchors": {
+      "from": "#0D9488",
+      "to": "#07C983"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Sistema",
+      "url": "https://sistema-representantes.com.br"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Acessar Painel",
+    "url": "https://sistema-representantes.com.br/dashboard"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Status da API",
+      "icon": "signal",
+      "url": "https://status.sistema-representantes.com.br"
+    },
+    {
+      "name": "Suporte",
+      "icon": "messages",
+      "url": "mailto:suporte@sistema-representantes.com.br"
+    },
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/sistema-representantes"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Começando",
+      "pages": [
+        "index",
+        "quickstart",
+        "concepts",
+        "authentication",
+        "error-handling"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/introduction",
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "group": "Endpoints",
+          "pages": [
+            "api-reference/clients",
+            "api-reference/sales"
+          ]
         }
       ]
     }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/sistema-representantes",
+    "linkedin": "https://linkedin.com/company/sistema-representantes"
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+  "backgroundImage": "/images/background.png",
+  "modeToggle": {
+    "default": "light",
+    "isHidden": false
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": true
+  },
+  "search": {
+    "prompt": "Buscar na documentação..."
+  },
+  "metadata": {
+    "og:title": "Sistema de Representantes - Documentação da API",
+    "og:description": "Documentação completa da API REST para integração com o Sistema de Representantes",
+    "og:image": "/images/og-image.png",
+    "og:site_name": "Sistema de Representantes Docs",
+    "twitter:title": "Sistema de Representantes - Documentação da API",
+    "twitter:description": "Documentação completa da API REST para integração com o Sistema de Representantes",
+    "twitter:image": "/images/og-image.png",
+    "twitter:card": "summary_large_image"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-XXXXXXXXXX"
+    },
+    "hotjar": {
+      "hjid": 1234567,
+      "hjsv": 6
+    },
+    "posthog": {
+      "apiKey": "phc_xxxxxxxxxxxxxxxxxxxxxxxxxx"
     }
   },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+  "integrations": {
+    "intercom": {
+      "appId": "xxxxxxxxx"
     }
+  },
+  "redirects": [
+    {
+      "source": "/docs",
+      "destination": "/"
+    },
+    {
+      "source": "/api",
+      "destination": "/api-reference/introduction"
+    }
+  ],
+  "api": {
+    "baseUrl": "https://api.sistema-representantes.com.br",
+    "auth": {
+      "method": "key",
+      "name": "x-api-key"
+    },
+    "playground": {
+      "mode": "show"
+    }
+  },
+  "openapi": "/api-reference/openapi.json",
+  "versions": ["v1"],
+  "defaultVersion": "v1",
+  "isWhiteLabeled": false,
+  "primaryTab": {
+    "name": "Guia"
   }
 }

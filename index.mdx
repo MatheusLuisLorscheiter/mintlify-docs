@@ -1,97 +1,69 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: Sistema de Representantes - API REST
+description: Documentação oficial da API REST do Sistema de Representantes
 ---
 
-## Setting up
+# Sistema de Representantes - API REST
 
-Get your documentation site up and running in minutes.
+Bem-vindo à documentação oficial da API REST do Sistema de Representantes. Esta API permite integração com sistemas externos para gerenciar clientes e vendas.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+## Visão Geral
 
-## Make it yours
+O Sistema de Representantes oferece endpoints REST para:
 
-Design a docs site that looks great and empowers your users.
+- **Gerenciamento de Clientes**: Criar e listar clientes
+- **Gerenciamento de Vendas**: Criar e listar vendas com itens
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+## Características Principais
+
+<CardGroup cols={2}>
+  <Card title="API RESTful" icon="code">
+    Endpoints REST seguindo as melhores práticas de design de APIs
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Autenticação via API Key" icon="key">
+    Sistema seguro de autenticação usando chaves de API
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Multi-tenant" icon="building">
+    Suporte completo para múltiplas empresas com isolamento de dados
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Respostas em JSON" icon="brackets-curly">
+    Todas as respostas em formato JSON padronizado
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## Começando
 
-Everything you need to create world-class documentation.
+Para começar a usar a API, você precisa:
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+1. **Obter uma API Key**: Entre em contato com o administrador do sistema
+2. **Configurar a autenticação**: Use o header `x-api-key` em todas as requisições
+3. **Fazer sua primeira requisição**: Teste com o endpoint de listagem de clientes
 
-## Need inspiration?
+## Base URL
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+```
+https://api.sistema-representantes.com.br/api/v1
+```
+
+## Autenticação
+
+Todas as requisições devem incluir o header de autenticação:
+
+```bash
+x-api-key: sua-chave-api-aqui
+```
+
+## Códigos de Status HTTP
+
+| Código | Descrição |
+|--------|-----------|
+| 200    | Sucesso |
+| 201    | Recurso criado com sucesso |
+| 400    | Requisição inválida |
+| 401    | Não autorizado (API key inválida ou ausente) |
+| 403    | Acesso negado (empresa inativa) |
+| 500    | Erro interno do servidor |
+
+## Suporte
+
+Para suporte técnico ou dúvidas sobre a API, entre em contato com nossa equipe de desenvolvimento.

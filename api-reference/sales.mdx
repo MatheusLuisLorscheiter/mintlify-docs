@@ -1,104 +1,176 @@
 ---
 title: Vendas
-description: Endpoints para listar e criar vendas
+description: Endpoints para gerenciamento de vendas
 ---
 
-## GET /api/v1/sales
+# API de Vendas
 
-Lista vendas da empresa autenticada.
+Gerencie as vendas da sua empresa através destes endpoints.
 
-Query:
-- `page` (default 1)
-- `limit` (default 20, máx 100)
+## Listar Vendas
 
-Exemplo cURL:
+<ParamField path="GET" endpoint="/api/v1/sales">
+  Lista todas as vendas da empresa
+</ParamField>
 
-```bash
-curl -X GET \
-  -H "X-API-Key: SRK_xxxxxxxxx" \
-  "https://sistema-representantes.chavemestragestao.com.br/api/v1/sales?page=1&limit=20"
-```
+### Parâmetros de Query
 
-Resposta 200:
+<ParamField query="page" type="number" default="1">
+  Número da página para paginação
+</ParamField>
 
+<ParamField query="limit" type="number" default="20">
+  Número de registros por página (máximo: 100)
+</ParamField>
+
+### Resposta
+
+<ResponseField name="data" type="array">
+  Lista de vendas com informações do cliente e representada
+</ResponseField>
+
+<ResponseField name="page" type="number">
+  Página atual
+</ResponseField>
+
+<ResponseField name="limit" type="number">
+  Registros por página
+</ResponseField>
+
+<ResponseField name="total" type="number">
+  Total de registros
+</ResponseField>
+
+<ResponseExample>
 ```json
 {
   "data": [
     {
-      "id": "...",
-      "pedido": "...",
-      "data": "2025-08-26T12:00:00.000Z",
-      "cliente_nome": "Cliente X",
-      "representada_nome": "Representada Y",
-      "valor_total": 1500.5,
-      "currency": "BRL"
+      "id": "789e0123-e89b-12d3-a456-426614174222",
+      "pedido": "PED-2024-001",
+      "data": "2024-01-20T00:00:00Z",
+      "nf": "NF-12345",
+      "ano": 2024,
+      "mes": 1,
+      "dia": 20,
+      "cliente_id": "123e4567-e89b-12d3-a456-426614174000",
+      "cliente_nome": "Empresa ABC Ltda",
+      "representada_id": "321e6547-e89b-12d3-a456-426614174333",
+      "representada_nome": "Fornecedor XYZ",
+      "status": "Faturado",
+      "valor_total": 5500.00,
+      "currency": "BRL",
+      "created_at": "2024-01-20T15:30:00Z"
     }
   ],
   "page": 1,
   "limit": 20,
-  "total": 10
+  "total": 85
 }
 ```
+</ResponseExample>
 
-## POST /api/v1/sales
+## Criar Venda
 
-Cria uma venda com itens.
+<ParamField path="POST" endpoint="/api/v1/sales">
+  Cria uma nova venda com itens
+</ParamField>
 
-Body:
+### Body da Requisição
 
+<ParamField body="clienteId" type="string" required>
+  ID do cliente
+</ParamField>
+
+<ParamField body="representadaId" type="string" required>
+  ID da representada
+</ParamField>
+
+<ParamField body="data" type="string">
+  Data da venda (formato ISO 8601)
+</ParamField>
+
+<ParamField body="nf" type="string">
+  Número da nota fiscal
+</ParamField>
+
+<ParamField body="status" type="string" required>
+  Status da venda (ex: "Pedido", "Faturado", "Entregue")
+</ParamField>
+
+<ParamField body="pedido" type="string">
+  Número do pedido (gerado automaticamente se não informado)
+</ParamField>
+
+<ParamField body="itens" type="array" required>
+  Lista de itens da venda
+</ParamField>
+
+### Estrutura dos Itens
+
+<ParamField body="itens[].produtoId" type="string" required>
+  ID do produto
+</ParamField>
+
+<ParamField body="itens[].quantidade" type="number" required>
+  Quantidade vendida (deve ser positivo)
+</ParamField>
+
+<ParamField body="itens[].valorUnitario" type="number" required>
+  Valor unitário do produto
+</ParamField>
+
+<RequestExample>
 ```json
 {
-  "clienteId": "...",
-  "representadaId": "...",
-  "status": "EM_ANDAMENTO",
-  "nf": "",
-  "pedido": "",
+  "clienteId": "123e4567-e89b-12d3-a456-426614174000",
+  "representadaId": "321e6547-e89b-12d3-a456-426614174333",
+  "data": "2024-01-25T10:00:00Z",
+  "nf": "NF-54321",
+  "status": "Pedido",
   "itens": [
-    { "produtoId": "...", "quantidade": 1, "valorUnitario": 10.5 }
+    {
+      "produtoId": "prod-001",
+      "quantidade": 10,
+      "valorUnitario": 250.00
+    },
+    {
+      "produtoId": "prod-002",
+      "quantidade": 5,
+      "valorUnitario": 600.00
+    }
   ]
 }
 ```
+</RequestExample>
 
-Exemplo cURL:
-
-```bash
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: SRK_xxxxxxxxx" \
-  -d '{
-    "clienteId": "...",
-    "representadaId": "...",
-    "status": "EM_ANDAMENTO",
-    "itens": [{ "produtoId": "...", "quantidade": 1, "valorUnitario": 10.5 }]
-  }' \
-  "https://sistema-representantes.chavemestragestao.com.br/api/v1/sales"
-```
-
-Exemplo Java (HttpClient):
-
-```java
-var client = java.net.http.HttpClient.newHttpClient();
-var body = "{\"clienteId\":\"...\",\"representadaId\":\"...\",\"status\":\"EM_ANDAMENTO\",\"itens\":[{\"produtoId\":\"...\",\"quantidade\":1,\"valorUnitario\":10.5}]}";
-var req = java.net.http.HttpRequest.newBuilder()
-  .uri(java.net.URI.create("https://sistema-representantes.chavemestragestao.com.br/api/v1/sales"))
-  .header("Content-Type", "application/json")
-  .header("X-API-Key", "SRK_xxxxxxxxx")
-  .POST(java.net.http.HttpRequest.BodyPublishers.ofString(body))
-  .build();
-var res = client.send(req, java.net.http.HttpResponse.BodyHandlers.ofString());
-System.out.println(res.body());
-```
-
-Resposta 201:
-
+<ResponseExample>
 ```json
 {
   "data": {
-    "id": "...",
-    "pedido": "...",
-    "data": "2025-08-26T12:00:00.000Z",
-    "valor_total": 10.5,
-    "currency": "BRL"
+    "id": "999e0123-e89b-12d3-a456-426614174444",
+    "pedido": "PED-2024-002",
+    "data": "2024-01-25T10:00:00Z",
+    "nf": "NF-54321",
+    "ano": 2024,
+    "mes": 1,
+    "dia": 25,
+    "cliente_id": "123e4567-e89b-12d3-a456-426614174000",
+    "cliente_nome": "Empresa ABC Ltda",
+    "representada_id": "321e6547-e89b-12d3-a456-426614174333",
+    "representada_nome": "Fornecedor XYZ",
+    "status": "Pedido",
+    "valor_total": 5500.00,
+    "currency": "BRL",
+    "created_at": "2024-01-25T10:00:00Z"
   }
 }
 ```
+</ResponseExample>
+
+### Notas
+
+- O `valor_total` é calculado automaticamente somando todos os itens
+- Se o `pedido` não for informado, será gerado automaticamente
+- A `data` se não informada, será a data/hora atual
+- A moeda (`currency`) é sempre "BRL"

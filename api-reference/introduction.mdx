@@ -1,35 +1,58 @@
 ---
-title: 'Introdução'
-description: 'Referência da API REST v1 do Sistema de Representantes'
+title: Introdução à API
+description: Visão geral dos endpoints disponíveis na API REST
 ---
 
-<Note>
-  Esta documentação descreve a API pública exposta pelo Sistema de Representantes.
-  A autenticação é feita via API Key por empresa, enviada no header <code>X-API-Key</code>.
-</Note>
+# Introdução à API
 
-## Welcome
+A API REST do Sistema de Representantes fornece acesso programático às principais funcionalidades do sistema.
 
-Você pode explorar a API pelo playground usando a especificação OpenAPI abaixo.
+## Endpoints Disponíveis
 
-<Card
-  title="OpenAPI - REST v1"
-  icon="book-open-cover"
-  href="/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+### Clientes
+- `GET /api/v1/clients` - Listar clientes
+- `POST /api/v1/clients` - Criar novo cliente
 
-## Autenticação
+### Vendas
+- `GET /api/v1/sales` - Listar vendas
+- `POST /api/v1/sales` - Criar nova venda
 
-Todos os endpoints exigem chave de API por empresa no header:
+## Formato das Respostas
 
+Todas as respostas seguem um formato padronizado:
+
+### Sucesso
 ```json
-"security": [ { "ApiKeyAuth": [] } ]
-
-Header de exemplo:
-
-```http
-X-API-Key: SRK_xxxxx
+{
+  "data": { ... },
+  "page": 1,
+  "limit": 20,
+  "total": 100
+}
 ```
+
+### Erro
+```json
+{
+  "error": "Descrição do erro"
+}
 ```
+
+## Headers Obrigatórios
+
+| Header | Valor | Descrição |
+|--------|-------|-----------|
+| `x-api-key` | string | Sua chave de API para autenticação |
+| `Content-Type` | `application/json` | Tipo de conteúdo (para POST) |
+
+## Limites de Rate
+
+- 1000 requisições por hora por API key
+- Máximo de 100 registros por página nas listagens
+
+## Paginação
+
+Os endpoints de listagem suportam paginação através dos parâmetros:
+
+- `page` - Número da página (padrão: 1)
+- `limit` - Itens por página (padrão: 20, máximo: 100)

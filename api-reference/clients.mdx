@@ -1,105 +1,165 @@
 ---
 title: Clientes
-description: Endpoints para listar e criar clientes
+description: Endpoints para gerenciamento de clientes
 ---
 
-## GET /api/v1/clients
+# API de Clientes
 
-Lista clientes da empresa autenticada.
+Gerencie os clientes da sua empresa através destes endpoints.
 
-Query:
-- `page` (default 1)
-- `limit` (default 20, máx 100)
-- `search` (opcional)
+## Listar Clientes
 
-Exemplo cURL:
+<ParamField path="GET" endpoint="/api/v1/clients">
+  Lista todos os clientes da empresa
+</ParamField>
 
-```bash
-curl -X GET \
-  -H "X-API-Key: SRK_xxxxxxxxx" \
-  "https://sistema-representantes.chavemestragestao.com.br/api/v1/clients?page=1&limit=20&search=joao"
-```
+### Parâmetros de Query
 
-Exemplo Java (OkHttp):
+<ParamField query="page" type="number" default="1">
+  Número da página para paginação
+</ParamField>
 
-```java
-OkHttpClient client = new OkHttpClient();
-Request request = new Request.Builder()
-  .url("https://sistema-representantes.chavemestragestao.com.br/api/v1/clients?page=1&limit=20")
-  .addHeader("X-API-Key", "SRK_xxxxxxxxx")
-  .build();
-try (Response response = client.newCall(request).execute()) {
-  System.out.println(response.body().string());
-}
-```
+<ParamField query="limit" type="number" default="20">
+  Número de registros por página (máximo: 100)
+</ParamField>
 
-Resposta 200:
+<ParamField query="search" type="string">
+  Termo de busca (pesquisa em nome, código, cidade e email)
+</ParamField>
 
+### Resposta
+
+<ResponseField name="data" type="array">
+  Lista de clientes
+</ResponseField>
+
+<ResponseField name="page" type="number">
+  Página atual
+</ResponseField>
+
+<ResponseField name="limit" type="number">
+  Registros por página
+</ResponseField>
+
+<ResponseField name="total" type="number">
+  Total de registros
+</ResponseField>
+
+<ResponseExample>
 ```json
 {
   "data": [
     {
-      "id": "...",
-      "nome": "Cliente X",
-      "email": "x@exemplo.com",
-      "ativo": true
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "codigo": "CLI001",
+      "nome": "Empresa ABC Ltda",
+      "email": "contato@empresaabc.com.br",
+      "telefone": "(11) 98765-4321",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cnpj_cpf": "12.345.678/0001-90",
+      "endereco": "Rua das Flores, 123",
+      "bairro": "Centro",
+      "observacao": "Cliente VIP",
+      "ativo": true,
+      "created_at": "2024-01-15T10:30:00Z"
     }
   ],
   "page": 1,
   "limit": 20,
-  "total": 100
+  "total": 150
 }
 ```
+</ResponseExample>
 
-## POST /api/v1/clients
+## Criar Cliente
 
-Cria um cliente.
+<ParamField path="POST" endpoint="/api/v1/clients">
+  Cria um novo cliente
+</ParamField>
 
-Body:
+### Body da Requisição
 
+<ParamField body="nome" type="string" required>
+  Nome do cliente
+</ParamField>
+
+<ParamField body="codigo" type="string">
+  Código único do cliente
+</ParamField>
+
+<ParamField body="email" type="string">
+  Email do cliente (deve ser válido)
+</ParamField>
+
+<ParamField body="telefone" type="string">
+  Telefone do cliente
+</ParamField>
+
+<ParamField body="cidade" type="string">
+  Cidade do cliente
+</ParamField>
+
+<ParamField body="estado" type="string">
+  Estado (UF) do cliente
+</ParamField>
+
+<ParamField body="cnpj_cpf" type="string">
+  CNPJ ou CPF do cliente
+</ParamField>
+
+<ParamField body="endereco" type="string">
+  Endereço completo
+</ParamField>
+
+<ParamField body="bairro" type="string">
+  Bairro
+</ParamField>
+
+<ParamField body="observacao" type="string">
+  Observações adicionais
+</ParamField>
+
+<ParamField body="ativo" type="boolean" default="true">
+  Status do cliente
+</ParamField>
+
+<RequestExample>
 ```json
 {
-  "nome": "Cliente X",
-  "email": "x@exemplo.com",
-  "telefone": "...",
-  "cidade": "...",
-  "estado": "...",
+  "nome": "Nova Empresa Ltda",
+  "codigo": "CLI002",
+  "email": "contato@novaempresa.com.br",
+  "telefone": "(11) 91234-5678",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "cnpj_cpf": "98.765.432/0001-10",
+  "endereco": "Av. Paulista, 1000",
+  "bairro": "Bela Vista",
+  "observacao": "Potencial cliente grande",
   "ativo": true
 }
 ```
+</RequestExample>
 
-Exemplo cURL:
-
-```bash
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: SRK_xxxxxxxxx" \
-  -d '{
-    "nome": "Cliente X",
-    "email": "x@exemplo.com",
-    "ativo": true
-  }' \
-  "https://sistema-representantes.chavemestragestao.com.br/api/v1/clients"
-```
-
-Exemplo Node.js (fetch):
-
-```js
-const res = await fetch("https://sistema-representantes.chavemestragestao.com.br/api/v1/clients", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "X-API-Key": "SRK_xxxxxxxxx"
-  },
-  body: JSON.stringify({ nome: "Cliente X", ativo: true })
-});
-const json = await res.json();
-```
-
-Resposta 201:
-
+<ResponseExample>
 ```json
 {
-  "data": { "id": "...", "nome": "Cliente X", "ativo": true }
+  "data": {
+    "id": "456e7890-e89b-12d3-a456-426614174111",
+    "codigo": "CLI002",
+    "nome": "Nova Empresa Ltda",
+    "email": "contato@novaempresa.com.br",
+    "telefone": "(11) 91234-5678",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cnpj_cpf": "98.765.432/0001-10",
+    "endereco": "Av. Paulista, 1000",
+    "bairro": "Bela Vista",
+    "observacao": "Potencial cliente grande",
+    "ativo": true,
+    "created_at": "2024-01-20T14:25:00Z"
+  }
 }
 ```
+</ResponseExample>
