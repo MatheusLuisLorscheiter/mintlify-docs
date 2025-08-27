@@ -60,12 +60,12 @@
       "anchors": [
         {
           "anchor": "GitHub",
-          "href": "https://github.com/MatheusLuisLorscheiter/Sistema_Representantes",
+          "href": "https://github.com/MatheusLuisLorscheiter",
           "icon": "github"
         },
         {
           "anchor": "Suporte",
-          "href": "mailto:suporte@sistema-representantes.com.br",
+          "href": "mailto:suporte@chavemestragestao.com.br",
           "icon": "envelope-open"
         }
       ]
@@ -85,12 +85,12 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://sistema-representantes.com.br/dashboard"
+      "href": "https://representantes.app.br/dashboard"
     }
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/MatheusLuisLorscheiter/Sistema_Representantes",
+      "github": "https://github.com/MatheusLuisLorscheiter",
       "website": "https://sistema-representantes.com.br"
     }
   },
