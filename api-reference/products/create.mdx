@@ -1,0 +1,271 @@
+---
+title: "Criar Produto"
+api: "POST /api/v1/products"
+description: "Cadastra um novo produto no sistema"
+---
+
+<Tip>
+O ID do produto é definido pelo usuário e geralmente representa o código/SKU do produto.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Headers
+
+<ParamField header="Content-Type" type="string" required>
+  application/json
+</ParamField>
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+## Body
+
+<ParamField body="id" type="string" required>
+  ID único do produto (código/SKU)
+  
+  Este será o identificador do produto no sistema
+</ParamField>
+
+<ParamField body="nome" type="string" required>
+  Nome do produto
+  
+  Mínimo de 1 caractere
+</ParamField>
+
+<ParamField body="descricao" type="string">
+  Descrição detalhada do produto
+</ParamField>
+
+<ParamField body="preco" type="number" required>
+  Preço unitário do produto
+  
+  Deve ser maior ou igual a 0
+</ParamField>
+
+<ParamField body="unidade" type="string" default="UN">
+  Unidade de medida
+  
+  Exemplos: UN, KG, L, CX, PCT, M
+</ParamField>
+
+<ParamField body="estoque" type="number" default="0">
+  Quantidade inicial em estoque
+  
+  Número inteiro maior ou igual a 0
+</ParamField>
+
+<ParamField body="estoqueMinimo" type="number" default="0">
+  Estoque mínimo para alerta
+  
+  Número inteiro maior ou igual a 0
+</ParamField>
+
+<ParamField body="ativo" type="boolean" default="true">
+  Status inicial do produto
+  
+  - `true` - Produto ativo
+  - `false` - Produto inativo
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.sistema-representantes.com.br/api/v1/products" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "id": "QUEIJO-PRATO",
+    "nome": "Queijo Prato",
+    "descricao": "Queijo prato fatiado, embalagem de 1kg",
+    "preco": 42.50,
+    "unidade": "KG",
+    "estoque": 80,
+    "estoqueMinimo": 15,
+    "ativo": true
+  }'
+```
+
+```javascript JavaScript
+const produto = {
+  id: "REQUEIJAO-200G",
+  nome: "Requeijão Cremoso 200g",
+  descricao: "Requeijão cremoso tradicional, copo de 200g",
+  preco: 8.90,
+  unidade: "UN",
+  estoque: 200,
+  estoqueMinimo: 30
+};
+
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/products', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+  },
+  body: JSON.stringify(produto)
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Produto criado:', result.data);
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+import json
+
+url = "https://api.sistema-representantes.com.br/api/v1/products"
+headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+# Criar produto em caixa
+produto = {
+    "id": "IOGURTE-MORANGO-CX",
+    "nome": "Iogurte Sabor Morango",
+    "descricao": "Iogurte integral sabor morango, caixa com 12 unidades de 170g",
+    "preco": 36.00,
+    "unidade": "CX",
+    "estoque": 50,
+    "estoqueMinimo": 10,
+    "ativo": True
+}
+
+response = requests.post(url, headers=headers, json=produto)
+result = response.json()
+
+if response.status_code == 201:
+    print("Produto criado com sucesso!")
+    print(f"ID: {result['data']['id']}")
+    print(f"Nome: {result['data']['nome']}")
+    print(f"Preço: R$ {result['data']['preco']:.2f} por {result['data']['unidade']}")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Dados do produto criado
+  
+  <Expandable title="Estrutura do produto">
+    <ResponseField name="id" type="string">
+      ID único do produto
+    </ResponseField>
+    <ResponseField name="nome" type="string">
+      Nome do produto
+    </ResponseField>
+    <ResponseField name="descricao" type="string">
+      Descrição do produto
+    </ResponseField>
+    <ResponseField name="preco" type="number">
+      Preço unitário
+    </ResponseField>
+    <ResponseField name="unidade" type="string">
+      Unidade de medida
+    </ResponseField>
+    <ResponseField name="estoque" type="number">
+      Quantidade em estoque
+    </ResponseField>
+    <ResponseField name="estoque_minimo" type="number">
+      Estoque mínimo
+    </ResponseField>
+    <ResponseField name="ativo" type="boolean">
+      Status do produto
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      Data de criação
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      Data da última atualização
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseExample>
+
+```json 201 - Criado
+{
+  "success": true,
+  "data": {
+    "id": "QUEIJO-PRATO",
+    "nome": "Queijo Prato",
+    "descricao": "Queijo prato fatiado, embalagem de 1kg",
+    "preco": 42.50,
+    "unidade": "KG",
+    "estoque": 80,
+    "estoque_minimo": 15,
+    "ativo": true,
+    "created_at": "2024-01-26T10:00:00Z",
+    "updated_at": "2024-01-26T10:00:00Z"
+  }
+}
+```
+
+```json 400 - ID Duplicado
+{
+  "error": "Já existe um produto com este ID"
+}
+```
+
+```json 400 - Dados Inválidos
+{
+  "error": "Dados de entrada inválidos",
+  "details": [
+    {
+      "code": "too_small",
+      "minimum": 0,
+      "type": "number",
+      "inclusive": true,
+      "exact": false,
+      "message": "Number must be greater than or equal to 0",
+      "path": ["preco"]
+    }
+  ]
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key ausente"
+}
+```
+
+</ResponseExample>
+
+## Validações
+
+<Warning>
+**Validações aplicadas:**
+- ID deve ser único no sistema
+- Nome deve ter pelo menos 1 caractere
+- Preço deve ser maior ou igual a 0
+- Estoque e estoque mínimo devem ser números inteiros não-negativos
+</Warning>
+
+## Dicas
+
+<Tip>
+**Boas práticas para IDs de produtos:**
+- Use códigos significativos (ex: PROD-001, QUEIJO-MUSSARELA)
+- Mantenha um padrão consistente
+- Evite caracteres especiais
+- Use maiúsculas para facilitar busca
+</Tip>

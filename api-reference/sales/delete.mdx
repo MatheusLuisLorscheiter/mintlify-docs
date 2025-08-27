@@ -1,0 +1,159 @@
+---
+title: "Deletar Venda"
+api: "DELETE /api/v1/sales/{id}"
+description: "Remove permanentemente uma venda do sistema"
+---
+
+<Warning>
+Esta ação é irreversível. A venda e todos os seus itens serão permanentemente removidos.
+</Warning>
+
+<Note>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Note>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único da venda (UUID)
+</ParamField>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222', {
+  method: 'DELETE',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Venda deletada com sucesso');
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+
+url = "https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+response = requests.delete(url, headers=headers)
+result = response.json()
+
+if response.status_code == 200:
+    print("Venda deletada com sucesso!")
+    print(result['message'])
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+```php PHP
+<?php
+$url = 'https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222';
+$headers = [
+    'x-api-key: sua-api-key-aqui'
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$result = json_decode($response, true);
+
+if ($httpCode === 200) {
+    echo "Venda deletada com sucesso!\n";
+    echo $result['message'] . "\n";
+} else {
+    echo "Erro: " . $result['error'] . "\n";
+}
+?>
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem de confirmação
+</ResponseField>
+
+### Erro
+
+<ResponseField name="error" type="string">
+  Mensagem de erro descritiva
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "message": "Venda deletada com sucesso"
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Venda não encontrada"
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key ausente"
+}
+```
+
+```json 403 - Proibido
+{
+  "error": "Empresa inativa"
+}
+```
+
+```json 500 - Erro Interno
+{
+  "error": "Erro ao deletar venda"
+}
+```
+
+</ResponseExample>
+
+## Considerações
+
+<Info>
+**Importante:**
+- Todos os itens da venda são automaticamente deletados
+- Esta operação não pode ser desfeita
+- Considere implementar um soft delete (marcar como deletado) em vez de remoção física
+- Recomenda-se fazer backup antes de deletar vendas importantes
+</Info>

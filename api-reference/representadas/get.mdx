@@ -1,0 +1,222 @@
+---
+title: "Buscar Representada"
+api: "GET /api/v1/representadas/{id}"
+description: "Busca uma representada específica pelo ID com estatísticas de vendas"
+---
+
+<Tip>
+Este endpoint retorna informações detalhadas da representada incluindo estatísticas de vendas.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único da representada (UUID)
+</ParamField>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.sistema-representantes.com.br/api/v1/representadas/987e6543-e89b-12d3-a456-426614174999" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/representadas/987e6543-e89b-12d3-a456-426614174999', {
+  method: 'GET',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Representada:', result.data.nome);
+  console.log('Estatísticas:');
+  console.log(`- Total de vendas: ${result.data.estatisticas.total_vendas}`);
+  console.log(`- Total de clientes: ${result.data.estatisticas.total_clientes}`);
+  console.log(`- Valor total vendido: R$ ${result.data.estatisticas.valor_total.toFixed(2)}`);
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+
+url = "https://api.sistema-representantes.com.br/api/v1/representadas/987e6543-e89b-12d3-a456-426614174999"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+response = requests.get(url, headers=headers)
+result = response.json()
+
+if response.status_code == 200:
+    rep = result['data']
+    stats = rep['estatisticas']
+    
+    print(f"Representada: {rep['nome']}")
+    print(f"CNPJ: {rep['cnpj']}")
+    print(f"Cidade: {rep['cidade']}/{rep['estado']}")
+    print(f"Comissão: {rep['comissao']}%")
+    print("\nEstatísticas de Vendas:")
+    print(f"- Total de vendas: {stats['total_vendas']}")
+    print(f"- Clientes atendidos: {stats['total_clientes']}")
+    print(f"- Valor total: R$ {stats['valor_total']:,.2f}")
+    
+    if stats['total_vendas'] > 0:
+        ticket_medio = stats['valor_total'] / stats['total_vendas']
+        print(f"- Ticket médio: R$ {ticket_medio:,.2f}")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Dados completos da representada com estatísticas
+  
+  <Expandable title="Estrutura da representada">
+    <ResponseField name="id" type="string">
+      ID único da representada (UUID)
+    </ResponseField>
+    <ResponseField name="nome" type="string">
+      Nome/Razão social
+    </ResponseField>
+    <ResponseField name="cnpj" type="string">
+      CNPJ
+    </ResponseField>
+    <ResponseField name="email" type="string">
+      Email de contato
+    </ResponseField>
+    <ResponseField name="telefone" type="string">
+      Telefone
+    </ResponseField>
+    <ResponseField name="endereco" type="string">
+      Endereço completo
+    </ResponseField>
+    <ResponseField name="cidade" type="string">
+      Cidade
+    </ResponseField>
+    <ResponseField name="estado" type="string">
+      Estado (UF)
+    </ResponseField>
+    <ResponseField name="contato" type="string">
+      Pessoa de contato
+    </ResponseField>
+    <ResponseField name="observacao" type="string">
+      Observações
+    </ResponseField>
+    <ResponseField name="comissao" type="number">
+      Percentual de comissão
+    </ResponseField>
+    <ResponseField name="ativo" type="boolean">
+      Status
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      Data de criação
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      Data da última atualização
+    </ResponseField>
+    <ResponseField name="estatisticas" type="object">
+      Estatísticas de vendas
+      
+      <Expandable title="Estrutura das estatísticas">
+        <ResponseField name="total_vendas" type="number">
+          Quantidade total de vendas realizadas
+        </ResponseField>
+        <ResponseField name="total_clientes" type="number">
+          Quantidade de clientes únicos atendidos
+        </ResponseField>
+        <ResponseField name="valor_total" type="number">
+          Valor total de todas as vendas
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "data": {
+    "id": "987e6543-e89b-12d3-a456-426614174999",
+    "nome": "Laticínios Exemplo LTDA",
+    "cnpj": "12.345.678/0001-90",
+    "email": "contato@laticinios-exemplo.com.br",
+    "telefone": "(11) 3456-7890",
+    "endereco": "Rua das Indústrias, 500",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "contato": "João Silva",
+    "observacao": "Principal fornecedor de queijos e derivados",
+    "comissao": 8.5,
+    "ativo": true,
+    "created_at": "2024-01-01T10:00:00Z",
+    "updated_at": "2024-01-25T14:30:00Z",
+    "estatisticas": {
+      "total_vendas": 150,
+      "total_clientes": 45,
+      "valor_total": 125750.50
+    }
+  }
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Representada não encontrada"
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key inválida"
+}
+```
+
+```json 500 - Erro Interno
+{
+  "error": "Erro interno"
+}
+```
+
+</ResponseExample>
+
+## Informações Úteis
+
+<Info>
+**As estatísticas incluem:**
+- Total de vendas realizadas para esta representada
+- Quantidade de clientes únicos que compraram produtos desta representada
+- Valor total acumulado de todas as vendas
+
+Use estas informações para:
+- Análise de desempenho
+- Cálculo de comissões
+- Tomada de decisão sobre parcerias
+- Identificação de representadas mais lucrativas
+</Info>

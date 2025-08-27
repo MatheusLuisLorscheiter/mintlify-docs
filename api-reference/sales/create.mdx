@@ -42,15 +42,15 @@ Você precisa de uma API key válida no header x-api-key para usar este endpoint
   Deve ser uma representada cadastrada
 </ParamField>
 
-<ParamField body="status" type="string" required>
-  Status inicial da venda
+<ParamField body="status" type="string" default="PAGA">
+  Status da venda
   
   Valores aceitos:
-  - `Pedido` - Venda registrada
-  - `Faturado` - Nota fiscal emitida
-  - `Enviado` - Mercadoria despachada
-  - `Entregue` - Mercadoria recebida
-  - `Cancelado` - Venda cancelada
+  - `PAGA` - Venda paga (padrão)
+  - `AGUARDANDO PAGAMENTO` - Aguardando pagamento
+  - `CANCELADA` - Venda cancelada
+  - `ENVIADA` - Venda enviada
+  - `ENTREGUE` - Venda entregue
 </ParamField>
 
 <ParamField body="data" type="string">
@@ -195,7 +195,7 @@ headers = {
 data = {
     "clienteId": "123e4567-e89b-12d3-a456-426614174000",
     "representadaId": "987e6543-e89b-12d3-a456-426614174999",
-    "status": "Faturado",
+    "status": "Em processamento",
     "data": date.today().strftime("%Y-%m-%d"),
     "itens": [
         {

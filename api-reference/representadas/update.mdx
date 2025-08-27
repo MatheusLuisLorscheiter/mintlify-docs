@@ -1,0 +1,276 @@
+---
+title: "Atualizar Representada"
+api: "PUT /api/v1/representadas/{id}"
+description: "Atualiza os dados de uma representada existente"
+---
+
+<Tip>
+Use este endpoint para atualizar informações de contato, comissão ou status de representadas.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único da representada (UUID)
+</ParamField>
+
+## Headers
+
+<ParamField header="Content-Type" type="string" required>
+  application/json
+</ParamField>
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+## Body
+
+<Info>
+Todos os campos são opcionais. Envie apenas os campos que deseja atualizar.
+</Info>
+
+<ParamField body="nome" type="string">
+  Nome/Razão social da representada
+  
+  Mínimo de 1 caractere
+</ParamField>
+
+<ParamField body="cnpj" type="string">
+  CNPJ da representada
+  
+  Pode ser nulo para remover
+</ParamField>
+
+<ParamField body="email" type="string">
+  Email de contato
+  
+  Deve ser um email válido ou nulo
+</ParamField>
+
+<ParamField body="telefone" type="string">
+  Telefone de contato
+  
+  Pode ser nulo para remover
+</ParamField>
+
+<ParamField body="endereco" type="string">
+  Endereço completo
+  
+  Pode ser nulo para remover
+</ParamField>
+
+<ParamField body="cidade" type="string">
+  Cidade
+  
+  Pode ser nulo para remover
+</ParamField>
+
+<ParamField body="estado" type="string">
+  Estado (UF)
+  
+  Pode ser nulo para remover
+</ParamField>
+
+<ParamField body="contato" type="string">
+  Nome da pessoa de contato
+  
+  Pode ser nulo para remover
+</ParamField>
+
+<ParamField body="observacao" type="string">
+  Observações gerais
+  
+  Pode ser nulo para remover
+</ParamField>
+
+<ParamField body="comissao" type="number">
+  Percentual de comissão
+  
+  Valor entre 0 e 100
+</ParamField>
+
+<ParamField body="ativo" type="boolean">
+  Status da representada
+  
+  - `true` - Representada ativa
+  - `false` - Representada inativa
+</ParamField>
+
+<RequestExample>
+
+```bash Atualizar Comissão
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/representadas/987e6543-e89b-12d3-a456-426614174999" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "comissao": 10.0,
+    "observacao": "Comissão aumentada devido ao alto volume de vendas"
+  }'
+```
+
+```bash Atualizar Contato
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/representadas/987e6543-e89b-12d3-a456-426614174999" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "contato": "Maria Santos",
+    "email": "maria.santos@laticinios-exemplo.com.br",
+    "telefone": "(11) 98765-4321"
+  }'
+```
+
+```javascript JavaScript
+// Desativar representada
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/representadas/987e6543-e89b-12d3-a456-426614174999', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+  },
+  body: JSON.stringify({
+    ativo: false,
+    observacao: "Contrato encerrado em 26/01/2024 - Não renovado"
+  })
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Representada atualizada:', result.data);
+  console.log('Status:', result.data.ativo ? 'Ativa' : 'Inativa');
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+import json
+
+url = "https://api.sistema-representantes.com.br/api/v1/representadas/987e6543-e89b-12d3-a456-426614174999"
+headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+# Atualização completa de dados
+data = {
+    "endereco": "Av. Industrial, 2000",
+    "cidade": "Guarulhos",
+    "estado": "SP",
+    "telefone": "(11) 2222-3333",
+    "comissao": 9.0,
+    "observacao": "Mudança de endereço - Nova sede a partir de 01/02/2024"
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+
+if response.status_code == 200:
+    print("Representada atualizada com sucesso!")
+    print(f"Nome: {result['data']['nome']}")
+    print(f"Novo endereço: {result['data']['endereco']}")
+    print(f"Cidade: {result['data']['cidade']}/{result['data']['estado']}")
+    print(f"Comissão atual: {result['data']['comissao']}%")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Dados completos da representada atualizada (mesma estrutura do GET)
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "data": {
+    "id": "987e6543-e89b-12d3-a456-426614174999",
+    "nome": "Laticínios Exemplo LTDA",
+    "cnpj": "12.345.678/0001-90",
+    "email": "maria.santos@laticinios-exemplo.com.br",
+    "telefone": "(11) 98765-4321",
+    "endereco": "Av. Industrial, 2000",
+    "cidade": "Guarulhos",
+    "estado": "SP",
+    "contato": "Maria Santos",
+    "observacao": "Mudança de endereço - Nova sede a partir de 01/02/2024",
+    "comissao": 9.0,
+    "ativo": true,
+    "created_at": "2024-01-01T10:00:00Z",
+    "updated_at": "2024-01-26T16:45:00Z"
+  }
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Representada não encontrada"
+}
+```
+
+```json 400 - Dados Inválidos
+{
+  "error": "Dados de entrada inválidos",
+  "details": [
+    {
+      "code": "too_big",
+      "maximum": 100,
+      "type": "number",
+      "inclusive": true,
+      "message": "Number must be less than or equal to 100",
+      "path": ["comissao"]
+    }
+  ]
+}
+```
+
+</ResponseExample>
+
+## Validações
+
+<Warning>
+**Validações aplicadas:**
+- Nome deve ter pelo menos 1 caractere se fornecido
+- Email deve ser válido se fornecido
+- Comissão deve estar entre 0 e 100
+- Representada deve existir no sistema
+</Warning>
+
+## Casos de Uso Comuns
+
+<Info>
+**Exemplos práticos:**
+
+1. **Ajustar comissão**: Modifique apenas o campo `comissao` após negociação
+2. **Atualizar contato**: Atualize `contato`, `email` e `telefone` quando houver mudança
+3. **Mudança de endereço**: Atualize `endereco`, `cidade` e `estado`
+4. **Desativar representada**: Defina `ativo: false` ao encerrar contrato
+5. **Adicionar observações**: Use o campo `observacao` para registrar informações importantes
+</Info>
+
+## Dicas
+
+<Tip>
+**Boas práticas:**
+- Sempre adicione uma observação ao desativar uma representada explicando o motivo
+- Mantenha os dados de contato sempre atualizados
+- Revise periodicamente as comissões conforme desempenho
+- Use o campo observação para registrar acordos especiais ou condições
+</Tip>

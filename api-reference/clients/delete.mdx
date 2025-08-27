@@ -1,0 +1,180 @@
+---
+title: "Deletar Cliente"
+api: "DELETE /api/v1/clients/{id}"
+description: "Remove permanentemente um cliente do sistema"
+---
+
+<Warning>
+Esta ação é irreversível. O cliente será permanentemente removido do sistema.
+</Warning>
+
+<Note>
+Clientes com vendas associadas não podem ser deletados. Você deve primeiro deletar ou reatribuir todas as vendas do cliente.
+</Note>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único do cliente (UUID)
+</ParamField>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.sistema-representantes.com.br/api/v1/clients/123e4567-e89b-12d3-a456-426614174000" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/clients/123e4567-e89b-12d3-a456-426614174000', {
+  method: 'DELETE',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Cliente deletado com sucesso');
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+
+url = "https://api.sistema-representantes.com.br/api/v1/clients/123e4567-e89b-12d3-a456-426614174000"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+response = requests.delete(url, headers=headers)
+result = response.json()
+
+if response.status_code == 200:
+    print("Cliente deletado com sucesso!")
+    print(result['message'])
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+```php PHP
+<?php
+$url = 'https://api.sistema-representantes.com.br/api/v1/clients/123e4567-e89b-12d3-a456-426614174000';
+$headers = [
+    'x-api-key: sua-api-key-aqui'
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$result = json_decode($response, true);
+
+if ($httpCode === 200) {
+    echo "Cliente deletado com sucesso!\n";
+    echo $result['message'] . "\n";
+} else {
+    echo "Erro: " . $result['error'] . "\n";
+}
+?>
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem de confirmação
+</ResponseField>
+
+### Erro
+
+<ResponseField name="error" type="string">
+  Mensagem de erro descritiva
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "message": "Cliente deletado com sucesso"
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Cliente não encontrado"
+}
+```
+
+```json 400 - Cliente com Vendas
+{
+  "error": "Cliente possui 15 venda(s) associada(s) e não pode ser deletado"
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key ausente"
+}
+```
+
+```json 403 - Proibido
+{
+  "error": "Empresa inativa"
+}
+```
+
+```json 500 - Erro Interno
+{
+  "error": "Erro ao deletar cliente"
+}
+```
+
+</ResponseExample>
+
+## Considerações
+
+<Info>
+**Importante:**
+- Clientes com vendas não podem ser deletados (integridade referencial)
+- Esta operação não pode ser desfeita
+- Considere desativar o cliente (`ativo: false`) em vez de deletar
+- Recomenda-se fazer backup antes de deletar clientes importantes
+</Info>
+
+## Alternativas
+
+<Tip>
+**Alternativa recomendada**: Em vez de deletar, considere desativar o cliente usando o endpoint PUT:
+
+```bash
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/clients/{id}" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{"ativo": false}'
+```
+
+Isso mantém o histórico e permite reativar o cliente no futuro.
+</Tip>

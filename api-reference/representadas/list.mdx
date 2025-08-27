@@ -1,0 +1,222 @@
+---
+title: "Listar Representadas"
+api: "GET /api/v1/representadas"
+description: "Lista todas as representadas cadastradas com paginação"
+---
+
+<Tip>
+Use os parâmetros de busca e filtro para encontrar representadas específicas.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="page" type="number" default="1">
+  Número da página para paginação
+</ParamField>
+
+<ParamField query="limit" type="number" default="20">
+  Quantidade de itens por página (máximo 100)
+</ParamField>
+
+<ParamField query="search" type="string">
+  Busca por nome, CNPJ ou cidade da representada
+</ParamField>
+
+<ParamField query="ativo" type="boolean">
+  Filtrar representadas por status
+  - `true` - Apenas representadas ativas
+  - `false` - Apenas representadas inativas
+  - Omitir para listar todas
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.sistema-representantes.com.br/api/v1/representadas?page=1&limit=10&ativo=true" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/representadas?search=laticínios', {
+  method: 'GET',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Total de representadas:', result.total);
+  result.data.forEach(rep => {
+    console.log(`${rep.nome} - ${rep.cidade}/${rep.estado} - Comissão: ${rep.comissao}%`);
+  });
+}
+```
+
+```python Python
+import requests
+
+url = "https://api.sistema-representantes.com.br/api/v1/representadas"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+params = {
+    'page': 1,
+    'limit': 50,
+    'ativo': 'true'
+}
+
+response = requests.get(url, headers=headers, params=params)
+result = response.json()
+
+if response.status_code == 200:
+    print(f"Total de representadas ativas: {result['total']}")
+    for rep in result['data']:
+        print(f"- {rep['nome']} ({rep['cnpj']})")
+        print(f"  Cidade: {rep['cidade']}/{rep['estado']}")
+        print(f"  Comissão: {rep['comissao']}%")
+        print()
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  Lista de representadas
+  
+  <Expandable title="Estrutura da representada">
+    <ResponseField name="id" type="string">
+      ID único da representada (UUID)
+    </ResponseField>
+    <ResponseField name="nome" type="string">
+      Nome/Razão social da representada
+    </ResponseField>
+    <ResponseField name="cnpj" type="string">
+      CNPJ da representada
+    </ResponseField>
+    <ResponseField name="email" type="string">
+      Email de contato
+    </ResponseField>
+    <ResponseField name="telefone" type="string">
+      Telefone de contato
+    </ResponseField>
+    <ResponseField name="endereco" type="string">
+      Endereço completo
+    </ResponseField>
+    <ResponseField name="cidade" type="string">
+      Cidade
+    </ResponseField>
+    <ResponseField name="estado" type="string">
+      Estado (UF)
+    </ResponseField>
+    <ResponseField name="contato" type="string">
+      Nome da pessoa de contato
+    </ResponseField>
+    <ResponseField name="observacao" type="string">
+      Observações gerais
+    </ResponseField>
+    <ResponseField name="comissao" type="number">
+      Percentual de comissão (0-100)
+    </ResponseField>
+    <ResponseField name="ativo" type="boolean">
+      Status da representada
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      Data de criação
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      Data da última atualização
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="page" type="number">
+  Página atual
+</ResponseField>
+
+<ResponseField name="limit" type="number">
+  Quantidade de itens por página
+</ResponseField>
+
+<ResponseField name="total" type="number">
+  Total de representadas encontradas
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "data": [
+    {
+      "id": "987e6543-e89b-12d3-a456-426614174999",
+      "nome": "Laticínios Exemplo LTDA",
+      "cnpj": "12.345.678/0001-90",
+      "email": "contato@laticinios-exemplo.com.br",
+      "telefone": "(11) 3456-7890",
+      "endereco": "Rua das Indústrias, 500",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "contato": "João Silva",
+      "observacao": "Principal fornecedor de queijos e derivados",
+      "comissao": 8.5,
+      "ativo": true,
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-25T14:30:00Z"
+    },
+    {
+      "id": "456e7890-e89b-12d3-a456-426614174888",
+      "nome": "Bebidas Premium Distribuidora",
+      "cnpj": "98.765.432/0001-10",
+      "email": "vendas@bebidas-premium.com",
+      "telefone": "(21) 2345-6789",
+      "endereco": "Av. Comercial, 1000",
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ",
+      "contato": "Maria Oliveira",
+      "observacao": "Especializada em bebidas importadas",
+      "comissao": 10.0,
+      "ativo": true,
+      "created_at": "2024-01-05T11:00:00Z",
+      "updated_at": "2024-01-20T09:15:00Z"
+    }
+  ],
+  "page": 1,
+  "limit": 10,
+  "total": 15
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key inválida"
+}
+```
+
+```json 500 - Erro Interno
+{
+  "error": "Erro interno"
+}
+```
+
+</ResponseExample>

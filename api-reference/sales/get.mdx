@@ -1,0 +1,197 @@
+---
+title: "Buscar Venda"
+api: "GET /api/v1/sales/{id}"
+description: "Busca uma venda específica pelo ID"
+---
+
+<Tip>
+Retorna todos os detalhes de uma venda, incluindo informações do cliente, representada e todos os itens.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único da venda (UUID)
+</ParamField>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222', {
+  method: 'GET',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Venda encontrada:', result.data);
+  console.log('Itens:', result.data.itens);
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+
+url = "https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+response = requests.get(url, headers=headers)
+result = response.json()
+
+if response.status_code == 200:
+    print(f"Venda: {result['data']['pedido']}")
+    print(f"Cliente: {result['data']['cliente_nome']}")
+    print(f"Valor Total: R$ {result['data']['valor_total']:.2f}")
+    print("\nItens:")
+    for item in result['data']['itens']:
+        print(f"- {item['produto_id']}: {item['quantidade']} x R$ {item['valor_unitario']:.2f}")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Dados completos da venda
+  
+  <Expandable title="Estrutura da venda">
+    <ResponseField name="id" type="string">
+      ID único da venda (UUID)
+    </ResponseField>
+    <ResponseField name="pedido" type="string">
+      Código do pedido
+    </ResponseField>
+    <ResponseField name="data" type="string">
+      Data da venda
+    </ResponseField>
+    <ResponseField name="nf" type="string">
+      Número da nota fiscal (opcional)
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Status da venda
+    </ResponseField>
+    <ResponseField name="cliente_id" type="string">
+      ID do cliente
+    </ResponseField>
+    <ResponseField name="cliente_nome" type="string">
+      Nome do cliente
+    </ResponseField>
+    <ResponseField name="representada_id" type="string">
+      ID da representada
+    </ResponseField>
+    <ResponseField name="representada_nome" type="string">
+      Nome da representada
+    </ResponseField>
+    <ResponseField name="valor_total" type="number">
+      Valor total da venda
+    </ResponseField>
+    <ResponseField name="itens" type="array">
+      Lista de itens da venda
+      
+      <Expandable title="Estrutura do item">
+        <ResponseField name="produto_id" type="string">
+          ID do produto
+        </ResponseField>
+        <ResponseField name="quantidade" type="number">
+          Quantidade vendida
+        </ResponseField>
+        <ResponseField name="valor_unitario" type="number">
+          Valor unitário
+        </ResponseField>
+        <ResponseField name="valor_total" type="number">
+          Valor total do item
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      Data de criação
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      Data da última atualização
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "data": {
+    "id": "789e0123-e89b-12d3-a456-426614174222",
+    "pedido": "PED-2024-003",
+    "data": "2024-01-25T00:00:00.000Z",
+    "nf": null,
+    "status": "Em processamento",
+    "ano": 2024,
+    "mes": 1,
+    "dia": 25,
+    "cliente_id": "123e4567-e89b-12d3-a456-426614174000",
+    "cliente_nome": "Supermercado Central",
+    "representada_id": "987e6543-e89b-12d3-a456-426614174999",
+    "representada_nome": "Laticínios Exemplo",
+    "valor_total": 1824.50,
+    "currency": "BRL",
+    "itens": [
+      {
+        "produto_id": "QUEIJO-MUSSARELA",
+        "quantidade": 20,
+        "valor_unitario": 45.90,
+        "valor_total": 918.00
+      },
+      {
+        "produto_id": "QUEIJO-PRATO",
+        "quantidade": 15,
+        "valor_unitario": 42.50,
+        "valor_total": 637.50
+      }
+    ],
+    "created_at": "2024-01-25T14:30:00Z",
+    "updated_at": "2024-01-25T14:30:00Z"
+  }
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Venda não encontrada"
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key inválida"
+}
+```
+
+</ResponseExample>

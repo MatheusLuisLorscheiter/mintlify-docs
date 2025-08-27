@@ -1,0 +1,254 @@
+---
+title: "Atualizar Venda"
+api: "PUT /api/v1/sales/{id}"
+description: "Atualiza os dados de uma venda existente"
+---
+
+<Tip>
+Permite atualizar qualquer campo da venda. Se os itens forem fornecidos, todos os itens anteriores serão substituídos pelos novos.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+<Note>
+**Atualização de Itens**: Se você enviar o campo `itens`, todos os itens anteriores serão removidos e substituídos pelos novos. O valor total será recalculado automaticamente.
+</Note>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único da venda (UUID)
+</ParamField>
+
+## Headers
+
+<ParamField header="Content-Type" type="string" required>
+  application/json
+</ParamField>
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+## Body
+
+<Info>
+Todos os campos são opcionais. Envie apenas os campos que deseja atualizar.
+</Info>
+
+<ParamField body="clienteId" type="string">
+  ID do cliente (UUID)
+</ParamField>
+
+<ParamField body="representadaId" type="string">
+  ID da representada (UUID)
+</ParamField>
+
+<ParamField body="status" type="string">
+  Status da venda
+</ParamField>
+
+<ParamField body="data" type="string">
+  Data da venda no formato YYYY-MM-DD
+</ParamField>
+
+<ParamField body="nf" type="string">
+  Número da nota fiscal
+</ParamField>
+
+<ParamField body="pedido" type="string">
+  Código do pedido
+</ParamField>
+
+<ParamField body="itens" type="array">
+  Nova lista de itens (substitui todos os anteriores)
+  
+  <Expandable title="Estrutura do item">
+    <ParamField body="produtoId" type="string" required>
+      ID do produto
+    </ParamField>
+    <ParamField body="quantidade" type="number" required>
+      Quantidade vendida
+    </ParamField>
+    <ParamField body="valorUnitario" type="number" required>
+      Valor unitário do produto
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+
+```bash Atualizar Status
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "status": "Finalizada",
+    "nf": "NF-2024-001234"
+  }'
+```
+
+```bash Atualizar Itens
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "itens": [
+      {
+        "produtoId": "QUEIJO-MUSSARELA",
+        "quantidade": 25,
+        "valorUnitario": 45.90
+      },
+      {
+        "produtoId": "QUEIJO-PRATO",
+        "quantidade": 20,
+        "valorUnitario": 42.50
+      }
+    ]
+  }'
+```
+
+```javascript JavaScript
+// Atualizar múltiplos campos
+const updateData = {
+  status: "Enviada",
+  data: "2024-01-26",
+  itens: [
+    {
+      produtoId: "PROD-001",
+      quantidade: 30,
+      valorUnitario: 25.00
+    }
+  ]
+};
+
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+  },
+  body: JSON.stringify(updateData)
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Venda atualizada:', result.data);
+  console.log('Novo valor total:', result.data.valor_total);
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+import json
+
+url = "https://api.sistema-representantes.com.br/api/v1/sales/789e0123-e89b-12d3-a456-426614174222"
+headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+# Atualizar apenas o status
+data = {
+    "status": "Cancelada"
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+
+if response.status_code == 200:
+    print("Venda atualizada com sucesso!")
+    print(f"Novo status: {result['data']['status']}")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Dados completos da venda atualizada (mesma estrutura do GET)
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "data": {
+    "id": "789e0123-e89b-12d3-a456-426614174222",
+    "pedido": "PED-2024-003",
+    "data": "2024-01-26T00:00:00.000Z",
+    "nf": "NF-2024-001234",
+    "status": "Finalizada",
+    "cliente_id": "123e4567-e89b-12d3-a456-426614174000",
+    "cliente_nome": "Supermercado Central",
+    "representada_id": "987e6543-e89b-12d3-a456-426614174999",
+    "representada_nome": "Laticínios Exemplo",
+    "valor_total": 1997.50,
+    "itens": [
+      {
+        "produto_id": "QUEIJO-MUSSARELA",
+        "quantidade": 25,
+        "valor_unitario": 45.90,
+        "valor_total": 1147.50
+      },
+      {
+        "produto_id": "QUEIJO-PRATO",
+        "quantidade": 20,
+        "valor_unitario": 42.50,
+        "valor_total": 850.00
+      }
+    ],
+    "updated_at": "2024-01-26T10:15:00Z"
+  }
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Venda não encontrada"
+}
+```
+
+```json 400 - Dados Inválidos
+{
+  "error": "Dados de entrada inválidos",
+  "details": [
+    {
+      "code": "too_small",
+      "minimum": 1,
+      "type": "number",
+      "inclusive": false,
+      "exact": false,
+      "message": "Number must be greater than 1",
+      "path": ["itens", 0, "quantidade"]
+    }
+  ]
+}
+```
+
+</ResponseExample>
+
+## Validações
+
+<Warning>
+**Validações aplicadas:**
+- Se `clienteId` for fornecido, o cliente deve existir
+- Se `representadaId` for fornecida, a representada deve existir
+- Quantidades devem ser maiores que zero
+- Valores unitários devem ser não-negativos
+- Data não pode ser futura
+</Warning>

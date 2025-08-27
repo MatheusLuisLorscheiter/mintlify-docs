@@ -1,0 +1,199 @@
+---
+title: "Listar Produtos"
+api: "GET /api/v1/products"
+description: "Lista todos os produtos cadastrados com paginação"
+---
+
+<Tip>
+Use os parâmetros de busca e filtro para encontrar produtos específicos.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+## Query Parameters
+
+<ParamField query="page" type="number" default="1">
+  Número da página para paginação
+</ParamField>
+
+<ParamField query="limit" type="number" default="20">
+  Quantidade de itens por página (máximo 100)
+</ParamField>
+
+<ParamField query="search" type="string">
+  Busca por ID, nome ou descrição do produto
+</ParamField>
+
+<ParamField query="ativo" type="boolean">
+  Filtrar produtos por status
+  - `true` - Apenas produtos ativos
+  - `false` - Apenas produtos inativos
+  - Omitir para listar todos
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.sistema-representantes.com.br/api/v1/products?page=1&limit=10&ativo=true" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/products?search=queijo', {
+  method: 'GET',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Total de produtos:', result.total);
+  result.data.forEach(produto => {
+    console.log(`${produto.id}: ${produto.nome} - R$ ${produto.preco}`);
+  });
+}
+```
+
+```python Python
+import requests
+
+url = "https://api.sistema-representantes.com.br/api/v1/products"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+params = {
+    'page': 1,
+    'limit': 50,
+    'ativo': 'true'
+}
+
+response = requests.get(url, headers=headers, params=params)
+result = response.json()
+
+if response.status_code == 200:
+    print(f"Total de produtos ativos: {result['total']}")
+    for produto in result['data']:
+        print(f"- {produto['nome']}: R$ {produto['preco']:.2f} ({produto['unidade']})")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  Lista de produtos
+  
+  <Expandable title="Estrutura do produto">
+    <ResponseField name="id" type="string">
+      ID único do produto (código/SKU)
+    </ResponseField>
+    <ResponseField name="nome" type="string">
+      Nome do produto
+    </ResponseField>
+    <ResponseField name="descricao" type="string">
+      Descrição detalhada
+    </ResponseField>
+    <ResponseField name="preco" type="number">
+      Preço unitário
+    </ResponseField>
+    <ResponseField name="unidade" type="string">
+      Unidade de medida (UN, KG, L, etc.)
+    </ResponseField>
+    <ResponseField name="estoque" type="number">
+      Quantidade em estoque
+    </ResponseField>
+    <ResponseField name="estoque_minimo" type="number">
+      Estoque mínimo para alerta
+    </ResponseField>
+    <ResponseField name="ativo" type="boolean">
+      Status do produto
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      Data de criação
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      Data da última atualização
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="page" type="number">
+  Página atual
+</ResponseField>
+
+<ResponseField name="limit" type="number">
+  Quantidade de itens por página
+</ResponseField>
+
+<ResponseField name="total" type="number">
+  Total de produtos encontrados
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "data": [
+    {
+      "id": "QUEIJO-MUSSARELA",
+      "nome": "Queijo Mussarela",
+      "descricao": "Queijo mussarela fatiado, embalagem de 1kg",
+      "preco": 45.90,
+      "unidade": "KG",
+      "estoque": 150,
+      "estoque_minimo": 20,
+      "ativo": true,
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-25T14:30:00Z"
+    },
+    {
+      "id": "LEITE-INTEGRAL-1L",
+      "nome": "Leite Integral 1L",
+      "descricao": "Leite integral pasteurizado, caixa com 12 unidades",
+      "preco": 4.50,
+      "unidade": "UN",
+      "estoque": 500,
+      "estoque_minimo": 100,
+      "ativo": true,
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-20T08:15:00Z"
+    }
+  ],
+  "page": 1,
+  "limit": 10,
+  "total": 45
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key inválida"
+}
+```
+
+```json 500 - Erro Interno
+{
+  "error": "Erro interno"
+}
+```
+
+</ResponseExample>

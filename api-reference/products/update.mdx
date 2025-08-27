@@ -1,0 +1,233 @@
+---
+title: "Atualizar Produto"
+api: "PUT /api/v1/products/{id}"
+description: "Atualiza os dados de um produto existente"
+---
+
+<Tip>
+Use este endpoint para atualizar preços, estoque, informações ou status de produtos.
+</Tip>
+
+<Warning>
+Você precisa de uma API key válida no header x-api-key para usar este endpoint.
+</Warning>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único do produto (código/SKU)
+</ParamField>
+
+## Headers
+
+<ParamField header="Content-Type" type="string" required>
+  application/json
+</ParamField>
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+## Body
+
+<Info>
+Todos os campos são opcionais. Envie apenas os campos que deseja atualizar.
+</Info>
+
+<ParamField body="nome" type="string">
+  Nome do produto
+  
+  Mínimo de 1 caractere
+</ParamField>
+
+<ParamField body="descricao" type="string">
+  Descrição detalhada do produto
+  
+  Pode ser nulo para remover a descrição
+</ParamField>
+
+<ParamField body="preco" type="number">
+  Preço unitário do produto
+  
+  Deve ser maior ou igual a 0
+</ParamField>
+
+<ParamField body="unidade" type="string">
+  Unidade de medida
+  
+  Exemplos: UN, KG, L, CX, PCT, M
+</ParamField>
+
+<ParamField body="estoque" type="number">
+  Quantidade em estoque
+  
+  Número inteiro maior ou igual a 0
+</ParamField>
+
+<ParamField body="estoqueMinimo" type="number">
+  Estoque mínimo para alerta
+  
+  Número inteiro maior ou igual a 0
+</ParamField>
+
+<ParamField body="ativo" type="boolean">
+  Status do produto
+  
+  - `true` - Produto ativo
+  - `false` - Produto inativo
+</ParamField>
+
+<RequestExample>
+
+```bash Atualizar Preço
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/products/QUEIJO-MUSSARELA" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "preco": 47.90
+  }'
+```
+
+```bash Atualizar Estoque
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/products/LEITE-INTEGRAL-1L" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "estoque": 750,
+    "estoqueMinimo": 150
+  }'
+```
+
+```javascript JavaScript
+// Desativar produto
+const response = await fetch('https://api.sistema-representantes.com.br/api/v1/products/PROD-DESCONTINUADO', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+  },
+  body: JSON.stringify({
+    ativo: false,
+    descricao: "PRODUTO DESCONTINUADO - Não disponível para vendas"
+  })
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Produto atualizado:', result.data);
+} else {
+  console.error('Erro:', result.error);
+}
+```
+
+```python Python
+import requests
+import json
+
+url = "https://api.sistema-representantes.com.br/api/v1/products/QUEIJO-PRATO"
+headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+# Atualização completa após reajuste de preços
+data = {
+    "preco": 44.90,
+    "estoque": 120,
+    "descricao": "Queijo prato fatiado premium, embalagem de 1kg - NOVO PREÇO"
+}
+
+response = requests.put(url, headers=headers, json=data)
+result = response.json()
+
+if response.status_code == 200:
+    print("Produto atualizado com sucesso!")
+    print(f"Nome: {result['data']['nome']}")
+    print(f"Novo preço: R$ {result['data']['preco']:.2f}")
+    print(f"Estoque atual: {result['data']['estoque']} unidades")
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+    if 'details' in result:
+        print("Detalhes:", result['details'])
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  Dados completos do produto atualizado (mesma estrutura do GET)
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "data": {
+    "id": "QUEIJO-MUSSARELA",
+    "nome": "Queijo Mussarela",
+    "descricao": "Queijo mussarela fatiado, embalagem de 1kg",
+    "preco": 47.90,
+    "unidade": "KG",
+    "estoque": 150,
+    "estoque_minimo": 20,
+    "ativo": true,
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-26T16:30:00Z"
+  }
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Produto não encontrado"
+}
+```
+
+```json 400 - Dados Inválidos
+{
+  "error": "Dados de entrada inválidos",
+  "details": [
+    {
+      "code": "too_small",
+      "minimum": 0,
+      "type": "number",
+      "inclusive": true,
+      "message": "Number must be greater than or equal to 0",
+      "path": ["preco"]
+    }
+  ]
+}
+```
+
+</ResponseExample>
+
+## Validações
+
+<Warning>
+**Validações aplicadas:**
+- Nome deve ter pelo menos 1 caractere se fornecido
+- Preço deve ser maior ou igual a 0 se fornecido
+- Estoque e estoque mínimo devem ser números inteiros não-negativos
+- Produto deve existir no sistema
+</Warning>
+
+## Casos de Uso Comuns
+
+<Info>
+**Exemplos práticos:**
+
+1. **Reajuste de preços**: Atualize apenas o campo `preco`
+2. **Reposição de estoque**: Atualize o campo `estoque` após recebimento
+3. **Descontinuar produto**: Defina `ativo: false` e atualize a descrição
+4. **Ajustar alertas**: Modifique `estoqueMinimo` conforme demanda
+5. **Correção de informações**: Atualize nome ou descrição incorretos
+</Info>

@@ -1,13 +1,17 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Sistema de Representantes API",
+  "name": "Sistema Representantes - API",
   "colors": {
     "primary": "#0D9488",
     "light": "#07C983",
     "dark": "#0F766E"
   },
   "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo.svg",
+    "dark": "/logo.svg"
+  },
   "navigation": {
     "tabs": [
       {
@@ -30,14 +34,51 @@
             "group": "Clientes",
             "pages": [
               "api-reference/clients/list",
-              "api-reference/clients/create"
+              "api-reference/clients/create",
+              "api-reference/clients/get",
+              "api-reference/clients/update",
+              "api-reference/clients/delete"
             ]
           },
+                          {
+                  "group": "Vendas",
+                  "pages": [
+                    "api-reference/sales/list",
+                    "api-reference/sales/create",
+                    "api-reference/sales/get",
+                    "api-reference/sales/update",
+                    "api-reference/sales/update-status",
+                    "api-reference/sales/delete"
+                  ]
+                }
+        ]
+      },
+      {
+        "tab": "Produtos",
+        "groups": [
           {
-            "group": "Vendas",
+            "group": "Produtos",
             "pages": [
-              "api-reference/sales/list",
-              "api-reference/sales/create"
+              "api-reference/products/list",
+              "api-reference/products/create",
+              "api-reference/products/get",
+              "api-reference/products/update",
+              "api-reference/products/delete"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Representadas",
+        "groups": [
+          {
+            "group": "Representadas",
+            "pages": [
+              "api-reference/representadas/list",
+              "api-reference/representadas/create",
+              "api-reference/representadas/get",
+              "api-reference/representadas/update",
+              "api-reference/representadas/delete"
             ]
           }
         ]

@@ -1,0 +1,240 @@
+---
+title: "Deletar Representada"
+api: "DELETE /api/v1/representadas/{id}"
+description: "Remove permanentemente uma representada do sistema"
+---
+
+<Warning>
+Esta ação é irreversível. A representada será permanentemente removida do sistema.
+</Warning>
+
+<Note>
+Representadas com vendas ou produtos associados não podem ser deletadas para manter a integridade do sistema.
+</Note>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único da representada (UUID)
+</ParamField>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.sistema-representantes.com.br/api/v1/representadas/123e4567-e89b-12d3-a456-426614174111" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const representadaId = '123e4567-e89b-12d3-a456-426614174111';
+
+const response = await fetch(`https://api.sistema-representantes.com.br/api/v1/representadas/${representadaId}`, {
+  method: 'DELETE',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Representada deletada com sucesso');
+  console.log(result.message);
+} else {
+  console.error('Erro ao deletar:', result.error);
+  
+  if (result.error.includes('venda(s) associada(s)')) {
+    console.log('A representada possui vendas e não pode ser deletada.');
+    console.log('Considere desativá-la em vez de deletar.');
+  }
+}
+```
+
+```python Python
+import requests
+
+representada_id = "123e4567-e89b-12d3-a456-426614174111"
+url = f"https://api.sistema-representantes.com.br/api/v1/representadas/{representada_id}"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+response = requests.delete(url, headers=headers)
+result = response.json()
+
+if response.status_code == 200:
+    print("Representada deletada com sucesso!")
+    print(result['message'])
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+    
+    # Verificar tipo de erro
+    error_msg = result.get('error', '')
+    if 'venda(s) associada(s)' in error_msg:
+        print("\n⚠️ A representada possui vendas no sistema.")
+        print("Não é possível deletar para manter o histórico.")
+        print("Considere desativar a representada em vez de deletar.")
+    elif 'produto(s) associado(s)' in error_msg:
+        print("\n⚠️ A representada possui produtos cadastrados.")
+        print("Remova ou reatribua os produtos antes de deletar.")
+```
+
+```php PHP
+<?php
+$representadaId = '123e4567-e89b-12d3-a456-426614174111';
+$url = "https://api.sistema-representantes.com.br/api/v1/representadas/{$representadaId}";
+$headers = [
+    'x-api-key: sua-api-key-aqui'
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$result = json_decode($response, true);
+
+if ($httpCode === 200) {
+    echo "Representada deletada com sucesso!\n";
+    echo $result['message'] . "\n";
+} else {
+    echo "Erro: " . $result['error'] . "\n";
+    
+    if (strpos($result['error'], 'venda(s) associada(s)') !== false) {
+        echo "\nA representada possui vendas associadas.\n";
+        echo "Recomendamos desativar em vez de deletar.\n";
+    }
+}
+?>
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem de confirmação
+</ResponseField>
+
+### Erro
+
+<ResponseField name="error" type="string">
+  Mensagem de erro descritiva
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "message": "Representada deletada com sucesso"
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Representada não encontrada"
+}
+```
+
+```json 400 - Representada com Vendas
+{
+  "error": "Representada possui 87 venda(s) associada(s) e não pode ser deletada"
+}
+```
+
+```json 400 - Representada com Produtos
+{
+  "error": "Representada possui 15 produto(s) associado(s) e não pode ser deletada"
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key ausente"
+}
+```
+
+```json 403 - Proibido
+{
+  "error": "Empresa inativa"
+}
+```
+
+```json 500 - Erro Interno
+{
+  "error": "Erro ao deletar representada"
+}
+```
+
+</ResponseExample>
+
+## Considerações Importantes
+
+<Info>
+**Antes de deletar uma representada:**
+- Verifique se não há vendas associadas
+- Verifique se não há produtos vinculados
+- Considere o impacto no histórico e relatórios
+- Faça backup se necessário
+- Avalie se desativar não seria mais apropriado
+</Info>
+
+## Restrições de Integridade
+
+<Warning>
+**Uma representada NÃO pode ser deletada se:**
+1. Possui vendas realizadas (mesmo antigas)
+2. Possui produtos cadastrados
+3. Está sendo referenciada em outros registros
+
+Estas restrições garantem a integridade do histórico de vendas e relatórios.
+</Warning>
+
+## Alternativa Recomendada
+
+<Tip>
+**Em vez de deletar, considere desativar a representada:**
+
+```bash
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/representadas/{id}" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{
+    "ativo": false,
+    "observacao": "Contrato encerrado em XX/XX/XXXX"
+  }'
+```
+
+**Vantagens de desativar:**
+- Mantém histórico de vendas intacto
+- Preserva relatórios e análises
+- Permite reativar no futuro se necessário
+- Mantém rastreabilidade completa
+</Tip>
+
+## Quando Deletar
+
+<Note>
+**Delete representadas apenas quando:**
+- Foram criadas por engano
+- São dados de teste
+- Nunca foram utilizadas (sem vendas ou produtos)
+- Não há necessidade de manter histórico
+</Note>

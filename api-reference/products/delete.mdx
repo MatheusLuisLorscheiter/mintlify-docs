@@ -1,0 +1,208 @@
+---
+title: "Deletar Produto"
+api: "DELETE /api/v1/products/{id}"
+description: "Remove permanentemente um produto do sistema"
+---
+
+<Warning>
+Esta ação é irreversível. O produto será permanentemente removido do sistema.
+</Warning>
+
+<Note>
+Produtos que já foram vendidos (existem em itens de vendas) não podem ser deletados para manter a integridade do histórico.
+</Note>
+
+## Path Parameters
+
+<ParamField path="id" type="string" required>
+  ID único do produto (código/SKU)
+</ParamField>
+
+## Headers
+
+<ParamField header="x-api-key" type="string" required>
+  API key de autenticação
+</ParamField>
+
+<RequestExample>
+
+```bash cURL
+curl -X DELETE "https://api.sistema-representantes.com.br/api/v1/products/PROD-TESTE-001" \
+  -H "x-api-key: sua-api-key-aqui"
+```
+
+```javascript JavaScript
+const produtoId = 'PROD-OBSOLETO';
+
+const response = await fetch(`https://api.sistema-representantes.com.br/api/v1/products/${produtoId}`, {
+  method: 'DELETE',
+  headers: {
+    'x-api-key': 'sua-api-key-aqui'
+  }
+});
+
+const result = await response.json();
+
+if (result.success) {
+  console.log('Produto deletado com sucesso');
+  console.log(result.message);
+} else {
+  console.error('Erro ao deletar:', result.error);
+}
+```
+
+```python Python
+import requests
+
+produto_id = "TESTE-PRODUTO-123"
+url = f"https://api.sistema-representantes.com.br/api/v1/products/{produto_id}"
+headers = {
+    'x-api-key': 'sua-api-key-aqui'
+}
+
+response = requests.delete(url, headers=headers)
+result = response.json()
+
+if response.status_code == 200:
+    print("Produto deletado com sucesso!")
+    print(result['message'])
+else:
+    print(f"Erro: {result.get('error', 'Erro desconhecido')}")
+    
+    # Se o produto tem vendas associadas
+    if "está sendo usado em" in result.get('error', ''):
+        print("💡 Dica: Considere desativar o produto em vez de deletar")
+```
+
+```php PHP
+<?php
+$produtoId = 'PROD-ANTIGO';
+$url = "https://api.sistema-representantes.com.br/api/v1/products/{$produtoId}";
+$headers = [
+    'x-api-key: sua-api-key-aqui'
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+$result = json_decode($response, true);
+
+if ($httpCode === 200) {
+    echo "Produto deletado com sucesso!\n";
+    echo $result['message'] . "\n";
+} else {
+    echo "Erro: " . $result['error'] . "\n";
+    
+    if (strpos($result['error'], 'está sendo usado') !== false) {
+        echo "O produto possui vendas associadas e não pode ser deletado.\n";
+        echo "Considere desativá-lo em vez de deletar.\n";
+    }
+}
+?>
+```
+
+</RequestExample>
+
+## Response
+
+### Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Mensagem de confirmação
+</ResponseField>
+
+### Erro
+
+<ResponseField name="error" type="string">
+  Mensagem de erro descritiva
+</ResponseField>
+
+<ResponseExample>
+
+```json 200 - Sucesso
+{
+  "success": true,
+  "message": "Produto deletado com sucesso"
+}
+```
+
+```json 404 - Não Encontrado
+{
+  "error": "Produto não encontrado"
+}
+```
+
+```json 400 - Produto com Vendas
+{
+  "error": "Produto está sendo usado em 25 venda(s) e não pode ser deletado"
+}
+```
+
+```json 401 - Não Autorizado
+{
+  "error": "API key ausente"
+}
+```
+
+```json 403 - Proibido
+{
+  "error": "Empresa inativa"
+}
+```
+
+```json 500 - Erro Interno
+{
+  "error": "Erro ao deletar produto"
+}
+```
+
+</ResponseExample>
+
+## Considerações Importantes
+
+<Info>
+**Antes de deletar um produto:**
+- Verifique se não há vendas associadas
+- Considere o impacto no histórico e relatórios
+- Faça backup se necessário
+- Avalie se desativar não seria mais apropriado
+</Info>
+
+## Alternativa Recomendada
+
+<Tip>
+**Em vez de deletar, considere desativar o produto:**
+
+```bash
+curl -X PUT "https://api.sistema-representantes.com.br/api/v1/products/{id}" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: sua-api-key-aqui" \
+  -d '{"ativo": false}'
+```
+
+**Vantagens de desativar:**
+- Mantém histórico de vendas intacto
+- Permite reativar no futuro se necessário
+- Preserva relatórios e análises
+- Evita problemas de integridade referencial
+</Tip>
+
+## Quando Deletar
+
+<Warning>
+**Delete produtos apenas quando:**
+- Foram criados por engano
+- São dados de teste
+- Nunca foram utilizados em vendas
+- Não há necessidade de manter histórico
+</Warning>
