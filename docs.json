@@ -13,63 +13,46 @@
     "dark": "/logo.svg"
   },
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Guias",
-        "groups": [
-          {
-            "group": "Introdução",
-            "pages": [
-              "index",
-              "authentication"
-            ]
-          }
+        "group": "Clientes",
+        "pages": [
+          "api-reference/clients/list",
+          "api-reference/clients/create",
+          "api-reference/clients/get",
+          "api-reference/clients/update",
+          "api-reference/clients/delete"
         ]
       },
       {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "Clientes",
-            "pages": [
-              "api-reference/clients/list",
-              "api-reference/clients/create",
-              "api-reference/clients/get",
-              "api-reference/clients/update",
-              "api-reference/clients/delete"
-            ]
-          },
-                          {
-                  "group": "Vendas",
-                  "pages": [
-                    "api-reference/sales/list",
-                    "api-reference/sales/create",
-                    "api-reference/sales/get",
-                    "api-reference/sales/update",
-                    "api-reference/sales/update-status",
-                    "api-reference/sales/delete"
-                  ]
-                },
-                {
-                  "group": "Produtos",
-                  "pages": [
-                    "api-reference/products/list",
-                    "api-reference/products/create",
-                    "api-reference/products/get",
-                    "api-reference/products/update",
-                    "api-reference/products/delete"
-                  ]
-                },
-                {
-                  "group": "Representadas",
-                  "pages": [
-                    "api-reference/representadas/list",
-                    "api-reference/representadas/create",
-                    "api-reference/representadas/get",
-                    "api-reference/representadas/update",
-                    "api-reference/representadas/delete"
-                  ]
-                }
+        "group": "Vendas",
+        "pages": [
+          "api-reference/sales/list",
+          "api-reference/sales/create",
+          "api-reference/sales/get",
+          "api-reference/sales/update",
+          "api-reference/sales/update-status",
+          "api-reference/sales/delete"
+        ]
+      },
+      {
+        "group": "Produtos",
+        "pages": [
+          "api-reference/products/list",
+          "api-reference/products/create",
+          "api-reference/products/get",
+          "api-reference/products/update",
+          "api-reference/products/delete"
+        ]
+      },
+      {
+        "group": "Representadas",
+        "pages": [
+          "api-reference/representadas/list",
+          "api-reference/representadas/create",
+          "api-reference/representadas/get",
+          "api-reference/representadas/update",
+          "api-reference/representadas/delete"
         ]
       }
     ],
