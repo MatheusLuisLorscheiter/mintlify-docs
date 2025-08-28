@@ -43,8 +43,8 @@ const result = await response.json();
 
 if (result.success) {
   console.log('Produto:', result.data);
-  console.log(`Preço: R$ ${result.data.preco.toFixed(2)} por ${result.data.unidade}`);
-  console.log(`Estoque: ${result.data.estoque} unidades`);
+  console.log(`Preço: R$ ${result.data.preco.toFixed(2)}`);
+
 } else {
   console.error('Erro:', result.error);
 }
@@ -65,11 +65,8 @@ if response.status_code == 200:
     produto = result['data']
     print(f"Produto: {produto['nome']}")
     print(f"Descrição: {produto['descricao']}")
-    print(f"Preço: R$ {produto['preco']:.2f} por {produto['unidade']}")
-    print(f"Estoque: {produto['estoque']} unidades")
-    
-    if produto['estoque'] < produto['estoque_minimo']:
-        print("⚠️ ALERTA: Estoque abaixo do mínimo!")
+    print(f"Preço: R$ {produto['preco']:.2f}")
+
 else:
     print(f"Erro: {result.get('error', 'Erro desconhecido')}")
 ```
@@ -100,15 +97,8 @@ else:
     <ResponseField name="preco" type="number">
       Preço unitário
     </ResponseField>
-    <ResponseField name="unidade" type="string">
-      Unidade de medida
-    </ResponseField>
-    <ResponseField name="estoque" type="number">
-      Quantidade atual em estoque
-    </ResponseField>
-    <ResponseField name="estoque_minimo" type="number">
-      Estoque mínimo para alerta
-    </ResponseField>
+
+
     <ResponseField name="ativo" type="boolean">
       Status do produto
     </ResponseField>
@@ -131,9 +121,8 @@ else:
     "nome": "Queijo Mussarela",
     "descricao": "Queijo mussarela fatiado, embalagem de 1kg",
     "preco": 45.90,
-    "unidade": "KG",
-    "estoque": 150,
-    "estoque_minimo": 20,
+
+
     "ativo": true,
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-25T14:30:00Z"
@@ -164,8 +153,7 @@ else:
 ## Informações Úteis
 
 <Info>
-**Verificações de estoque:**
-- Se `estoque < estoque_minimo`, o produto precisa de reposição
-- Se `estoque = 0`, o produto está sem estoque
-- Use estas informações para alertas e notificações
+**Informações do produto:**
+- O campo `preco` representa o valor de venda
+- Use o status `ativo` para controlar disponibilidade
 </Info>

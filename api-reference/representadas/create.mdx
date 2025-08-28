@@ -68,11 +68,6 @@ Você precisa de uma API key válida no header x-api-key para usar este endpoint
   Observações gerais sobre a representada
 </ParamField>
 
-<ParamField body="comissao" type="number" default="0">
-  Percentual de comissão padrão
-  
-  Valor entre 0 e 100
-</ParamField>
 
 <ParamField body="ativo" type="boolean" default="true">
   Status inicial da representada
@@ -217,9 +212,7 @@ else:
     <ResponseField name="observacao" type="string">
       Observações
     </ResponseField>
-    <ResponseField name="comissao" type="number">
-      Percentual de comissão
-    </ResponseField>
+
     <ResponseField name="ativo" type="boolean">
       Status
     </ResponseField>

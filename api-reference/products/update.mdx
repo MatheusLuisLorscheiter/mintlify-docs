@@ -5,7 +5,7 @@ description: "Atualiza os dados de um produto existente"
 ---
 
 <Tip>
-Use este endpoint para atualizar preços, estoque, informações ou status de produtos.
+Use este endpoint para atualizar preços, informações ou status de produtos.
 </Tip>
 
 <Warning>
@@ -52,23 +52,7 @@ Todos os campos são opcionais. Envie apenas os campos que deseja atualizar.
   Deve ser maior ou igual a 0
 </ParamField>
 
-<ParamField body="unidade" type="string">
-  Unidade de medida
-  
-  Exemplos: UN, KG, L, CX, PCT, M
-</ParamField>
 
-<ParamField body="estoque" type="number">
-  Quantidade em estoque
-  
-  Número inteiro maior ou igual a 0
-</ParamField>
-
-<ParamField body="estoqueMinimo" type="number">
-  Estoque mínimo para alerta
-  
-  Número inteiro maior ou igual a 0
-</ParamField>
 
 <ParamField body="ativo" type="boolean">
   Status do produto
@@ -93,8 +77,7 @@ curl -X PUT "https://api.sistema-representantes.com.br/api/v1/products/LEITE-INT
   -H "Content-Type: application/json" \
   -H "x-api-key: sua-api-key-aqui" \
   -d '{
-    "estoque": 750,
-    "estoqueMinimo": 150
+    "preco": 46.90
   }'
 ```
 
@@ -134,7 +117,7 @@ headers = {
 # Atualização completa após reajuste de preços
 data = {
     "preco": 44.90,
-    "estoque": 120,
+
     "descricao": "Queijo prato fatiado premium, embalagem de 1kg - NOVO PREÇO"
 }
 
@@ -145,7 +128,7 @@ if response.status_code == 200:
     print("Produto atualizado com sucesso!")
     print(f"Nome: {result['data']['nome']}")
     print(f"Novo preço: R$ {result['data']['preco']:.2f}")
-    print(f"Estoque atual: {result['data']['estoque']} unidades")
+
 else:
     print(f"Erro: {result.get('error', 'Erro desconhecido')}")
     if 'details' in result:
@@ -176,9 +159,8 @@ else:
     "nome": "Queijo Mussarela",
     "descricao": "Queijo mussarela fatiado, embalagem de 1kg",
     "preco": 47.90,
-    "unidade": "KG",
-    "estoque": 150,
-    "estoque_minimo": 20,
+
+
     "ativo": true,
     "created_at": "2024-01-15T10:00:00Z",
     "updated_at": "2024-01-26T16:30:00Z"
@@ -216,7 +198,7 @@ else:
 **Validações aplicadas:**
 - Nome deve ter pelo menos 1 caractere se fornecido
 - Preço deve ser maior ou igual a 0 se fornecido
-- Estoque e estoque mínimo devem ser números inteiros não-negativos
+
 - Produto deve existir no sistema
 </Warning>
 
@@ -226,8 +208,8 @@ else:
 **Exemplos práticos:**
 
 1. **Reajuste de preços**: Atualize apenas o campo `preco`
-2. **Reposição de estoque**: Atualize o campo `estoque` após recebimento
+2. **Correção de dados**: Atualize descrição ou unidade de medida
 3. **Descontinuar produto**: Defina `ativo: false` e atualize a descrição
-4. **Ajustar alertas**: Modifique `estoqueMinimo` conforme demanda
+4. **Mudança de unidade**: Altere a unidade de medida quando necessário
 5. **Correção de informações**: Atualize nome ou descrição incorretos
 </Info>
